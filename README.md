@@ -12,6 +12,6 @@ More importantly I hope that as you visit these past projects that you will disc
   
   
 Find me on LinkedIn: https://www.linkedin.com/in/wpendl/
-Or check out my Personal Website: WPendl.me
+Or check out my Personal Website: https://WPendl.me
 
 - Sincerely, William Pendleton
