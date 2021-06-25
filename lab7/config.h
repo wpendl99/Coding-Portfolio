@@ -1,6 +1,6 @@
-#ifndef LAB7_CONFIG
-#define LAB7_CONFIG
+#ifndef CONFIG_LAB7
+#define CONFIG_LAB7
 
 #define CONFIG_TIMER_PERIOD 50.0E-3
 
-#endif /* LAB7_CONFIG */
+#endif /* CONFIG_LAB7 */

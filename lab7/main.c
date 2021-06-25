@@ -46,13 +46,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // load value based upon the desired period is: load-value = (period *
 // timer-clock) - 1
 #define TIMER_CLOCK_FREQUENCY (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
-#define TIMER_LOAD_VALUE ((TIMER_PERIOD * TIMER_CLOCK_FREQUENCY) - 1.0)
+#define TIMER_LOAD_VALUE ((CONFIG_TIMER_PERIOD * TIMER_CLOCK_FREQUENCY) - 1.0)
 
 #define MAX_ACTIVE_MOLES 1 // Start out with this many moles.
 #define MAX_MISSES 50      // Game is over when there are this many misses.
 #define FOREVER 1          // Syntactic sugar for while (1) statements.
 #define MS_PER_TICK                                                            \
-  (TIMER_PERIOD * 1000) // Just multiply the timer period by 1000 to get ms.
+  (CONFIG_TIMER_PERIOD *                                                       \
+   1000) // Just multiply the timer period by 1000 to get ms.
 
 #define SWITCH_VALUE_9 9 // Binary 9 on the switches indicates 9 moles.
 #define SWITCH_VALUE_6 6 // Binary 6 on the switches indicates 6 moles.

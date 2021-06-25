@@ -46,9 +46,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // load value based upon the desired period is: load-value = (period *
 // timer-clock) - 1
 #define TIMER_CLOCK_FREQUENCY (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
-#define TIMER_LOAD_VALUE ((TIMER_PERIOD * TIMER_CLOCK_FREQUENCY) - 1.0)
+#define TIMER_LOAD_VALUE ((CONFIG_TIMER_PERIOD * TIMER_CLOCK_FREQUENCY) - 1.0)
 
-#define INTERRUPTS_PER_SECOND (1.0 / TIMER_PERIOD)
+#define INTERRUPTS_PER_SECOND (1.0 / CONFIG_TIMER_PERIOD)
 #define TOTAL_SECONDS 20
 #define MAX_INTERRUPT_COUNT (INTERRUPTS_PER_SECOND * TOTAL_SECONDS)
 
