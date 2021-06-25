@@ -73,7 +73,7 @@ def main():
                 diff_cmd = [
                     "/bin/bash",
                     "-c",
-                    "diff -u <(cat " + str(f) + ") <(clang-format " + str(f) + ")",
+                    "diff -u <(cat " + str(f) + ") <(clang-format-6.0 " + str(f) + ")",
                 ]
                 p = subprocess.Popen(diff_cmd, stdout=subprocess.PIPE)
                 stdout = p.communicate()[0]
@@ -85,7 +85,7 @@ def main():
                         sys.exit(1)
                     print("Formatting", f.relative_to(repo_root_dir))
 
-                    cmd = ["clang-format", "-i", "-style=LLVM", f]
+                    cmd = ["clang-format-6.0", "-i", "-style=LLVM", f]
                     subprocess.run(cmd)
 
                     num_formatted += 1
