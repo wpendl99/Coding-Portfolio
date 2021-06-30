@@ -10,6 +10,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "runningModes.h"
 #include "detector.h"
 #include "display.h"
+#include "drivers/buttons.h"
+#include "drivers/switches.h"
 #include "filter.h"
 #include "histogram.h"
 #include "hitLedTimer.h"
@@ -20,8 +22,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "leds.h"
 #include "lockoutTimer.h"
 #include "mio.h"
-#include "my_libs/buttons.h"
-#include "my_libs/switches.h"
 #include "queue.h"
 #include "sound.h"
 #include "transmitter.h"
@@ -33,6 +33,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 
 // Uncomment this code so that the code in the various modes will
 // ignore your own frequency. You still must properly implement

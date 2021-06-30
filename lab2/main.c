@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#include "my_libs/buttons.h"
-#include "my_libs/switches.h"
+#include "drivers/buttons.h"
+#include "drivers/switches.h"
 
 // Run switches and buttons runTest functions
 int main() {

@@ -15,8 +15,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "xil_io.h"
 #include "xparameters.h"
 
-#include "my_libs/buttons.h"
-#include "my_libs/intervalTimer.h"
+#include "drivers/buttons.h"
+#include "drivers/intervalTimer.h"
 #include "utils.h"
 
 #define MILESTONE_1 1

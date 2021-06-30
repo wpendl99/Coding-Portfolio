@@ -92,8 +92,8 @@ def get_files_to_copy_and_zip(lab):
 
     chk_lab_path = checker_path / lab
     src_lab_path = repo_path / lab
-    src_libs_path = repo_path / "my_libs"
-    dest_libs_path = test_repo_path / "my_libs"
+    src_libs_path = repo_path / "drivers"
+    dest_libs_path = test_repo_path / "drivers"
     dest_lab_path = test_repo_path / lab
     lasertag_path = repo_path / "lasertag"
 
@@ -105,17 +105,17 @@ def get_files_to_copy_and_zip(lab):
     if lab == "lab1":
         files.append((src_lab_path / "main.c", dest_lab_path, True))
     elif lab == "lab2":
-        files.append((chk_lab_path / "my_libs.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, True))
         files.append((src_libs_path / "switches.c", dest_libs_path, True))
     elif lab == "lab3":
-        files.append((chk_lab_path / "my_libs.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
         files.append((src_libs_path / "switches.c", dest_libs_path, False))
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, True))
     elif lab == "lab4":
-        files.append((chk_lab_path / "my_libs.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
         files.append((src_libs_path / "switches.c", dest_libs_path, False))
@@ -123,7 +123,7 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "clockControl.c", dest_lab_path, True))
         files.append((src_lab_path / "clockDisplay.c", dest_lab_path, True))
     elif lab == "lab5":
-        files.append((chk_lab_path / "my_libs.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
         files.append((src_libs_path / "switches.c", dest_libs_path, False))
@@ -134,7 +134,7 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
 
     elif lab == "lab6":
-        files.append((chk_lab_path / "my_libs.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
         files.append((src_libs_path / "switches.c", dest_libs_path, False))
@@ -146,7 +146,7 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "simonControl.c", dest_lab_path, True))
         files.append((src_lab_path / "globals.c", dest_lab_path, True))
     elif lab == "lab7":
-        files.append((chk_lab_path / "my_libs.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
         files.append((src_libs_path / "switches.c", dest_libs_path, False))

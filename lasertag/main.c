@@ -38,14 +38,15 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifdef LASER_TAG_MAIN
 
 #include "detector.h"
+#include "drivers/buttons.h"
 #include "filter.h"
 #include "filterTest.h"
 #include "gameModes.h"
-#include "my_libs/buttons.h"
 #include "runningModes.h"
 #include "sound.h"
 #include <assert.h>
 #include <stdio.h>
+
 
 // The program comes up in continuous mode.
 // Hold BTN2 while the program starts to come up in shooter mode.
