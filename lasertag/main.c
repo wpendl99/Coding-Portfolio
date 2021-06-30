@@ -47,7 +47,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <assert.h>
 #include <stdio.h>
 
-
 // The program comes up in continuous mode.
 // Hold BTN2 while the program starts to come up in shooter mode.
 int main() {

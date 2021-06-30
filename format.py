@@ -13,6 +13,7 @@ extensions_to_format = [".c", ".h"]
 
 dirs_to_exclude = [
     "build/",
+    "build_emu",
     "platforms/hw/",
     "platforms/zybo/xil_arm_toolchain/bsp",
     "lasertag/sounds",
