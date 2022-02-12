@@ -173,17 +173,17 @@ void runningModes_printRunTimeStatistics() {
 
 // Group all of the inits together to reduce visual clutter.
 void runningModes_initAll() {
+  mio_init(false);
   buttons_init();
   switches_init();
-  mio_init(false);
-  intervalTimer_initAll();
-  histogram_init(HISTOGRAM_BAR_COUNT);
   leds_init(true);
-  transmitter_init();
-  filter_init();
+  intervalTimer_initAll();
   isr_init();
-  hitLedTimer_init();
+  histogram_init(HISTOGRAM_BAR_COUNT);
+  filter_init();
+  transmitter_init();
   trigger_init();
+  hitLedTimer_init();
   lockoutTimer_init();
   sound_init();
 }

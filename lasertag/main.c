@@ -47,6 +47,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 int main() {
 
 #ifdef RUNNING_MODE_TESTS
+  // interrupts not needed for these tests
   queue_runTest(); // M1
   // filterTest_runTest(); // M3 T1
   // transmitter_runTest(); // M3 T2
@@ -55,8 +56,10 @@ int main() {
 #endif
 
 #ifdef RUNNING_MODE_M3_T2
+  mio_init(false);
   buttons_init();
   switches_init();
+  leds_init(true);
   isr_init();
 
   interrupts_initAll(true);           // main interrupt init function.
