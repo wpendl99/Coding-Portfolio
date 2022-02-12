@@ -36,13 +36,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "hitLedTimer.h"
 #include "interrupts.h"
 #include "isr.h"
+#include "leds.h"
 #include "lockoutTimer.h"
+#include "mio.h"
 #include "runningModes.h"
 #include "sound.h"
 #include "switches.h"
 #include "transmitter.h"
 #include "trigger.h"
-#include "detector.h"
 
 int main() {
 
