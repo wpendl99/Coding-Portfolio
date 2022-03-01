@@ -7,6 +7,12 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "runningModes.h"
 #include "detector.h"
 #include "display.h"
@@ -19,20 +25,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "intervalTimer.h"
 #include "isr.h"
 #include "ledTimer.h"
-#include "leds.h"
 #include "lockoutTimer.h"
-#include "mio.h"
-#include "queue.h"
-#include "sound.h"
 #include "transmitter.h"
 #include "trigger.h"
 #include "utils.h"
 #include "xparameters.h"
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 // Uncomment this code so that the code in the various modes will
 // ignore your own frequency. You still must properly implement
@@ -173,19 +170,11 @@ void runningModes_printRunTimeStatistics() {
 
 // Group all of the inits together to reduce visual clutter.
 void runningModes_initAll() {
-  mio_init(false);
-  buttons_init();
-  switches_init();
-  leds_init(true);
+  // assume mio, leds, buttons, & switches initialized in main.c
   intervalTimer_initAll();
-  isr_init();
   histogram_init(HISTOGRAM_BAR_COUNT);
   filter_init();
-  transmitter_init();
-  trigger_init();
-  hitLedTimer_init();
-  lockoutTimer_init();
-  sound_init();
+  isr_init(); // includes: transmitter, trigger, hitLedTimer, lockoutTimer, & sound init
 }
 
 // Returns the current switch-setting

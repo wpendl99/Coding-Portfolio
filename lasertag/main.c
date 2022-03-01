@@ -19,13 +19,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uncomment to run two-player mode, Milestone 5
 // #define RUNNING_MODE_M5
 
-// The following line enables the main() contained in laserTagMain.c
-// Leave this line uncommented unless you want to run some other special test
-// main().
-#define LASER_TAG_MAIN
-
-#ifdef LASER_TAG_MAIN
-
 #include <assert.h>
 #include <stdio.h>
 
@@ -45,7 +38,12 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "transmitter.h"
 #include "trigger.h"
 
+
 int main() {
+  mio_init(false);  // true enables debug prints
+  leds_init(false); // true enables debug prints
+  buttons_init();
+  switches_init();
 
 #ifdef RUNNING_MODE_TESTS
   // interrupts not needed for these tests
@@ -57,10 +55,9 @@ int main() {
 #endif
 
 #ifdef RUNNING_MODE_M3_T2
-  mio_init(false);
-  buttons_init();
-  switches_init();
-  leds_init(true);
+  // add transmitter, trigger, hitLedTimer, lockoutTimer,
+  // and sound init functions to isr_init(), i.e. anything
+  // with _tick() functions.
   isr_init();
 
   interrupts_initAll(true);           // main interrupt init function.
@@ -79,7 +76,6 @@ int main() {
 #ifdef RUNNING_MODE_M3_T3
   // The program comes up in continuous mode.
   // Hold BTN2 while the program starts to come up in shooter mode.
-  buttons_init(); // Init the buttons.
   if (buttons_read() & BUTTONS_BTN2_MASK) { // Read the buttons to see if BTN2 is depressed.
     printf("Starting shooter mode\n");
     runningModes_shooter(); // Run shooter mode if BTN2 is depressed.
@@ -96,5 +92,3 @@ int main() {
 
   return 0;
 }
-
-#endif // LASER_TAG_MAIN
