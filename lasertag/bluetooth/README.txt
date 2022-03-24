@@ -1,15 +1,14 @@
-To compile this into an exectuable that allows you to communicate between 
-and smartphone and ZYBO board, uncomment the #add_subdirectory(bluetooth)
-in the lasertag CMakeLists.txt file. To test this program, download the 
-Bluefruit Connect  app onto either IOS or Android phone, pair with the
-Adafruit Bluefruit LE device, and then select the UART panel. Type a single
-letter in the box at the bottom, hit send, and its uppercase version should
-appear in the upper window.
+To compile the main.c example into an executable that allows you to communicate 
+between a smartphone and a ZYBO board, uncomment #add_subdirectory(bluetooth) 
+in the lasertag CMakeLists.txt file. To connect with this program via 
+Bluetooth, download the Bluefruit Connect app onto either an IOS or Android 
+phone, pair with the Adafruit Bluefruit LE device, and then select the UART 
+panel. Type a single letter in the box at the bottom, hit send, and its 
+uppercase version should appear in the upper window. The blue LED on the 
+Bluetooth modem will glow when paired with the app.
 
-Note that the blue LED on the bluetooth modem will glow when paired with the app.
-
-bluetooth.c is provided solely as documenation so that you can write your
-own communication routines as necessary. Do not compile it as because it
-will cause multiple symbol defintions as this file is already compiled into
-the ZYBO libraries that are linked with all executables.
-
+Note: bluetooth.c is provided for documentation purpose only so you can see 
+what the provided functions do when you call them from your own code. Do not 
+compile and link bluetooth.c into your project. It is already compiled into the 
+lasertag library. Otherwise, you will get multiple symbol definitions when you 
+build your project.

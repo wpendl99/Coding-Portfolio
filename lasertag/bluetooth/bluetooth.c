@@ -5,12 +5,13 @@
  *      Author: hutch
  */
 
-// DONT COMPILE THiS AS IT IS ALREADY COMPILED INTO THE LASERTAG LIBRARY.
+// DONT COMPILE AND LINK THIS INTO YOUR PROJECT.
+// IT IS ALREADY COMPILED INTO THE LASERTAG LIBRARY.
 
-#include "supportFiles/bluetooth.h"
 #include <Xuartlite.h>
 #include <stdio.h>
 #include <xparameters.h>
+#include "bluetooth.h"
 
 static XUartLite bluetooth_uartInstance; // Handle to the bluetooth UART.
 static XUartLite_Config
