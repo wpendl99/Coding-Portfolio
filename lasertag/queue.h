@@ -55,7 +55,7 @@ typedef struct {
   char name[QUEUE_MAX_NAME_SIZE];
 } queue_t;
 
-// Allocates the memory to you queue (the data* pointer) and initializes all
+// Allocates memory for the queue (the data* pointer) and initializes all
 // parts of the data structure. Prints out an error message if malloc() fails
 // and calls assert(false) to print-out line-number information and die.
 void queue_init(queue_t *q, queue_size_t size, const char *name);

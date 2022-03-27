@@ -10,10 +10,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef TRANSMITTER_H_
 #define TRANSMITTER_H_
 
-#define TRANSMITTER_OUTPUT_PIN 13     // JF1 (pg. 25 of ZYBO reference manual).
-#define TRANSMITTER_PULSE_WIDTH 20000 // Based on a system tick-rate of 100 kHz.
 #include <stdbool.h>
 #include <stdint.h>
+
+#define TRANSMITTER_OUTPUT_PIN 13     // JF1 (pg. 25 of ZYBO reference manual).
+#define TRANSMITTER_PULSE_WIDTH 20000 // Based on a system tick-rate of 100 kHz.
 
 // The transmitter state machine generates a square wave output at the chosen
 // frequency as set by transmitter_setFrequencyNumber(). The step counts for the
@@ -21,6 +22,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // Standard init function.
 void transmitter_init();
+
+// Standard tick function.
+void transmitter_tick();
 
 // Activate the transmitter.
 void transmitter_run();
@@ -35,9 +39,6 @@ void transmitter_setFrequencyNumber(uint16_t frequencyNumber);
 
 // Returns the current frequency setting.
 uint16_t transmitter_getFrequencyNumber();
-
-// Standard tick function.
-void transmitter_tick();
 
 // Tests the transmitter.
 void transmitter_runTest();

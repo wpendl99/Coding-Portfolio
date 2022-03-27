@@ -34,7 +34,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
 
-#define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
 // The ZYBO board routes for inputs of the XADC to the XADC PMOD.
 // Set SELECTED_XADC_CHANNEL to the desired channel.
 // Channel 14 is the channel that is used for the laser-tag system.
@@ -54,9 +53,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // Uses interval timer 0 to measure time spent in ISR.
 #define ENABLE_INTERVAL_TIMER_0_IN_TIMER_ISR 1
-
-// Uses interval timer 0 to measure time spent in ISR.
-//#define ENABLE_INTERVAL_TIMER_0_IN_TIMER_ISR 1
 
 // queue_data_t interrupts_popAdcQueueData();
 // bool interrupts_adcQueueEmpty();
@@ -121,7 +117,7 @@ void interrupts_ackBluetoothInterrupts();
 
 extern volatile int interrupts_isrFlagGlobal;
 
-#else
+#else /* not ZYBO_BOARD */
 
 #define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
 
@@ -165,6 +161,6 @@ extern volatile int interrupts_isrFlagGlobal;
 } // extern "C'
 #endif
 
-#endif /* BOARD */
+#endif /* ZYBO_BOARD */
 
 #endif /* INTERRUPTS_H_ */

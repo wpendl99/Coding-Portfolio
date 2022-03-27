@@ -8,9 +8,10 @@
 // DONT COMPILE AND LINK THIS INTO YOUR PROJECT.
 // IT IS ALREADY COMPILED INTO THE LASERTAG LIBRARY.
 
-#include <Xuartlite.h>
 #include <stdio.h>
-#include <xparameters.h>
+#include <Xuartlite.h>
+
+#include "xparameters.h"
 #include "bluetooth.h"
 
 static XUartLite bluetooth_uartInstance; // Handle to the bluetooth UART.
@@ -223,4 +224,4 @@ void bluetooth_poll() {
 // input to the bluetooth UART and then prints the result. Useful for
 // configuring the bluetooth modem when in command mode. Terminates if the user
 // types a single "." on a line of input.
-void bluetooth_interactiveLoop() {}
+// void bluetooth_interactiveLoop() {}

@@ -19,9 +19,13 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 typedef uint16_t trigger_shotsRemaining_t;
 
 // Init trigger data-structures.
-// Determines whether the trigger switch of the gun is connected (see discussion
-// in lab web pages). Initializes the mio subsystem.
+// Initializes the mio subsystem.
+// Determines whether the trigger switch of the gun is connected
+// (see discussion in lab web pages).
 void trigger_init();
+
+// Standard tick function.
+void trigger_tick();
 
 // Enable the trigger state machine. The trigger state-machine is inactive until
 // this function is called. This allows you to ignore the trigger when helpful
@@ -36,9 +40,6 @@ trigger_shotsRemaining_t trigger_getRemainingShotCount();
 
 // Sets the number of remaining shots.
 void trigger_setRemainingShotCount(trigger_shotsRemaining_t count);
-
-// Standard tick function.
-void trigger_tick();
 
 // Runs the test continuously until BTN1 is pressed.
 // The test just prints out a 'D' when the trigger or BTN0

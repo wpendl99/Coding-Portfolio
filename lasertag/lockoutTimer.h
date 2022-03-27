@@ -18,17 +18,17 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define LOCKOUT_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
 
-// Calling this starts the timer.
-void lockoutTimer_start();
-
 // Perform any necessary inits for the lockout timer.
 void lockoutTimer_init();
 
-// Returns true if the timer is running.
-bool lockoutTimer_running();
-
 // Standard tick function.
 void lockoutTimer_tick();
+
+// Calling this starts the timer.
+void lockoutTimer_start();
+
+// Returns true if the timer is running.
+bool lockoutTimer_running();
 
 // Test function assumes interrupts have been completely enabled and
 // lockoutTimer_tick() function is invoked by isr_function().

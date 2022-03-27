@@ -7,12 +7,14 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "queue.h"
+
 #define SMALL_QUEUE_SIZE 1000
 #define SMALL_QUEUE_COUNT 10
+
 static queue_t smallQueue[SMALL_QUEUE_COUNT];
 static queue_t largeQueue;
 
@@ -33,6 +35,7 @@ static double popAndPushFromChainOfSmallQueues(double input) {
   return willBePoppedValue;
 }
 
+// Used by queue_runTest2()
 static bool compareChainOfSmallQueuesWithLargeQueue() {
   bool success = true;
   // Start comparing the oldest element in the chain of small queues, and the
@@ -61,6 +64,7 @@ static bool compareChainOfSmallQueuesWithLargeQueue() {
 #define FILLER 5
 #define TEST_SMALL_QUEUE_NAME "test_small_queue"
 #define TEST_LARGE_QUEUE_NAME "test_large_queue"
+// Alternate queue test.
 int16_t queue_runTest2() {
   bool success = true; // Be optimistic.
   // Let's make this a real torture test by testing queues against themselves.
@@ -125,7 +129,7 @@ int16_t queue_runTest2() {
 }
 
 // Used to check the status of the queue flags.
-// Returns true if the all of the queue status matches values of the arguments.
+// Returns true if all of the queue status flags match the argument values.
 // Returns false otherwise.
 // Prints informational messages if the queue status does not match the provided
 // argument values.
@@ -284,6 +288,10 @@ static bool queue_fillTest(queue_t *testQ, double *dataArray,
   return testResult;
 }
 
+#define PUSH_POP_Q_SIZE 100   // The size of the queue.
+#define NON_CIRC_Q_SIZE 1000  // Size of noncircularQ used to test the testQ.
+#define MAX_PUSH_POP_COUNT 20 // Maximum number of pushes or pops in one pass.
+#define PUSH_POP_Q_NAME "pushPopQ" // Name the queue.
 // Builds a test queue and applies a series of pushes and pops.
 // The value returned by queue_pop() is checked for correctness.
 // queue_elementCount() is also checked frequently to ensure that
@@ -297,10 +305,6 @@ static bool queue_fillTest(queue_t *testQ, double *dataArray,
 // The test terminates upon detecting an error or if no error has been detected
 // and the entire contents of the non-circular queue have been pushed into the
 // test Q and then pop'd from the test queue.
-#define PUSH_POP_Q_SIZE 100   // The size of the queue.
-#define NON_CIRC_Q_SIZE 1000  // Size of noncircularQ used to test the testQ.
-#define MAX_PUSH_POP_COUNT 20 // Maximum number of pushes or pops in one pass.
-#define PUSH_POP_Q_NAME "pushPopQ" // Name the queue.
 static bool queue_pushPopTest() {
   bool testResult = true;
   bool tempResult = true;
@@ -383,10 +387,10 @@ static bool queue_pushPopTest() {
   return testResult;
 }
 
-// Checks to see that underflow and overflow work, and that error messages are
-// printed.
 #define ERROR_CONDITION_Q_SIZE 10
 #define ERROR_CONDITION_Q_NAME "errorQ"
+// Checks to see that underflow and overflow work, and that error messages are
+// printed.
 bool queue_testErrorConditions() {
   bool tempResult = true; // Local test results.
   bool testResult = true; // Overall test results.
@@ -463,12 +467,12 @@ bool queue_testErrorConditions() {
   return testResult;
 }
 
-// Checks to see that queue_overwritePush() works correctly.
-// Simple test: just overwritePushes one set of values, and then another.
-// Checks to see that contents are correct afterwards.
 #define OVERWRITE_PUSH_TEST_QUEUE_SIZE 100 // tested queue will be this big.
 #define OVERWRITE_PUSH_TEST_QUEUE_NAME                                         \
   "overwriteQ" // tested queue will be this big.
+// Checks to see that queue_overwritePush() works correctly.
+// Simple test: just overwritePushes one set of values, and then another.
+// Checks to see that contents are correct afterwards.
 bool queue_overwritePushTest() {
   bool testResult = true; // Keep track of overall test results.
   // Build a queue for testing.
@@ -509,6 +513,10 @@ bool queue_overwritePushTest() {
   return testResult;
 }
 
+#define QUEUE_TEST_MAX_QUEUE_SIZE 100 // Used for the fill/empty tests.
+#define QUEUE_TEST_MAX_LOOP_COUNT                                              \
+  10 // All tests will be invoked this many times.
+#define QUEUE_TEST_QUEUE_NAME "test_queue"
 // Returns true if test passed, false otherwise.
 // This test will build a queue of random size between 10,000 and 20,000
 // elements, and:
@@ -522,10 +530,6 @@ bool queue_overwritePushTest() {
 // 5. Refill the array with the previous random values.
 // 6. Use queue_overwritePush() to write over all of the elements of the array,
 // checking the contents.
-#define QUEUE_TEST_MAX_QUEUE_SIZE 100 // Used for the fill/empty tests.
-#define QUEUE_TEST_MAX_LOOP_COUNT                                              \
-  10 // All tests will be invoked this many times.
-#define QUEUE_TEST_QUEUE_NAME "test_queue"
 bool queue_runTest() {
   bool testResult = true; // Be optimistic.
   // Overall test will be executed QUEUE_TEST_MAX_LOOP_COUNT times.

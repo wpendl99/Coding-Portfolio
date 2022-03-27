@@ -21,9 +21,18 @@ runningModes.c can give you some ideas about how to implement other
 modes here.
 */
 
+// This mode supports two teams, Team-A and Team-B.
+// Each team operates on its own configurable frequency.
+// Each player has a fixed set of lives and once they
+// have expended all lives, operation ceases and they are told
+// to return to base to await the ultimate end of the game.
+// The gun is clip-based and each clip contains a fixed number of shots
+// that takes a short time to reload a new clip.
+// The clips are automatically loaded.
 void runningModes_twoTeams() {
   uint16_t hitCount = 0;
   runningModes_initAll();
+
   // More initialization...
 
   // Implement game loop...

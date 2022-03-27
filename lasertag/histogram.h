@@ -10,10 +10,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef HISTOGRAM_H_
 #define HISTOGRAM_H_
 
-#include "display.h"
-//#include "detector.h"
-
 #include <stdint.h>
+
+#include "display.h"
 
 // Use ifndef because these should be defined in display.h
 #ifndef DISPLAY_WIDTH

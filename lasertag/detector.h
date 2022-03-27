@@ -11,10 +11,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef DETECTOR_H_
 #define DETECTOR_H_
 
-#include "isr.h"
-#include "queue.h"
 #include <stdbool.h>
 #include <stdint.h>
+
+#include "isr.h" // isr_AdcValue_t
 
 typedef uint16_t detector_hitCount_t;
 
@@ -67,6 +67,9 @@ double detector_getScaledAdcValue(isr_AdcValue_t adcValue);
  ******************************************************/
 
 // Students implement this as part of Milestone 3, Task 3.
+// Create two sets of power values and call your hit detection algorithm
+// on each set. With the same fudge factor, your hit detect algorithm
+// should detect a hit on the first set and not detect a hit on the second.
 void detector_runTest();
 
 #endif /* DETECTOR_H_ */

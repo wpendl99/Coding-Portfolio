@@ -19,17 +19,17 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define HIT_LED_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
 #define HIT_LED_TIMER_OUTPUT_PIN 11      // JF-3
 
+// Need to init things.
+void hitLedTimer_init();
+
+// Standard tick function.
+void hitLedTimer_tick();
+
 // Calling this starts the timer.
 void hitLedTimer_start();
 
 // Returns true if the timer is currently running.
 bool hitLedTimer_running();
-
-// Standard tick function.
-void hitLedTimer_tick();
-
-// Need to init things.
-void hitLedTimer_init();
 
 // Turns the gun's hit-LED on.
 void hitLedTimer_turnLedOn();

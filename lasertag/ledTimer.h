@@ -24,6 +24,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Initialize the ledTimer before you use it.
 void ledTimer_init();
 
+// Standard state-machine tick function. Call this to advance the state machine.
+void ledTimer_tick();
+
 // Starts the ledTimer running.
 void ledTimer_start();
 
@@ -48,9 +51,6 @@ void ledTimer_setTicksPerMs(uint32_t ticksPerMillisecond);
 // Flag = true means that the ledTimer will control the hitLed.
 // Flag = false means that the ledTimer does not control the hitLed.
 void ledTimer_controlHitLed(bool flag);
-
-// Standard state-machine tick function. Call this to advance the state machine.
-void ledTimer_tick();
 
 // Standard test function.
 void ledTimer_runTest();

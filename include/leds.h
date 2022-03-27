@@ -8,8 +8,10 @@ source code for personal or educational use.
 
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
+
 #ifndef LEDS_H_
 #define LEDS_H_
+
 #include <stdbool.h>
 
 // This will init the GPIO hardware so you can write to the 4 LEDs  (LD3 - LD0)

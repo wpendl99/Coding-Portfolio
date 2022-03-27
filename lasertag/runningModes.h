@@ -19,7 +19,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define LIVES 3
 #define HITS_PER_LIFE 5
 
-
 #include <stdint.h>
 
 // Prints out various run-time statistics on the TFT display.
@@ -35,17 +34,20 @@ void runningModes_printRunTimeStatistics();
 // Group all of the inits together to reduce visual clutter.
 void runningModes_initAll();
 
+// Returns the current switch-setting
+uint16_t runningModes_getFrequencySetting();
+
 // This mode runs continuously until btn3 is pressed.
 // When btn3 is pressed, it exits and prints performance information to the TFT.
-// During operation, it continuously displays that received power on each
-// channel, on the TFT. Frequency is selected via the slide-switches.
+// During operation, it continuously displays the received power for each
+// channel on the TFT. Transmit frequency is selected via the slide-switches.
 void runningModes_continuous();
 
 // This mode runs continuously until btn3 is pressed.
 // When btn3 is pressed, it exits and prints performance information to the TFT.
 // Game-playing mode. Each shot is registered on the histogram on the TFT.
 // Press BTN0 or the gun-trigger to shoot.
-// Frequency is selected via the slide-switches.
+// Transmit frequency is selected via the slide-switches.
 void runningModes_shooter();
 
 // This mode supports two teams, Team-A and Team-B.
@@ -58,15 +60,12 @@ void runningModes_shooter();
 // The clips are automatically loaded.
 void runningModes_twoTeams();
 
-void runningModes_zombie();
+// This mode can be used by the creative project
+void runningModes_creative();
 
-// Continuously cycles through all channels, shooting one pulse per channel.
-void runningModes_testShootAllChannels();
-
-// Returns the current switch-setting
-uint16_t runningModes_getFrequencySetting();
-
-// A simple test mode that continuously prints out raw ADC values.
+// This mode simply dumps raw ADC values to the console.
+// It can be used to determine if bipolar mode is working for the ADC.
+// Will loop forever. Stop the program with an external reset or Ctl-C.
 void runningModes_dumpRawAdcValues();
 
 #endif /* RUNNINGMODES_H_ */

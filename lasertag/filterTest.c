@@ -9,37 +9,38 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 /****************************************************************************************************
  * Comment out the line below to perform a filter-only verification. Leave the
- *line uncommented and you perform the verification from the adcBuffer to the
- *detector, for a more thorough test. Make sure to leave the line below
- *commented until you have completely coded detector.c and isr.c Otherwise this
- *file will not compile.
+ * line uncommented and you perform the verification from the adcBuffer to the
+ * detector, for a more thorough test. Make sure to leave the line below
+ * commented until you have completely coded detector.c and isr.c Otherwise this
+ * file will not compile.
  ***************************************************************************************************/
 //#define ADC_THROUGH_DETECTOR_FILTER_TEST
 
+#include <math.h>
+#include <stdio.h>
+
+#ifdef ADC_THROUGH_DETECTOR_FILTER_TEST
+#include "detector.h"
+#include "isr.h"
+#endif
+
+#include "filter.h"
+#include "histogram.h"
+#include "utils.h"
+
 /****************************************************************************************************
- * Uncomment the line below if your IIR-A coefficient arrays contain a leading
- *'1'.
+ * Uncomment the line below if your IIR-A coefficient arrays contain a leading '1'.
  ****************************************************************************************************/
 //#define FILTER_TEST_USED_LEADING_1_IN_IIR_A_COEFFICIENT_ARRAY
 
 /****************************************************************************************************
  * Uncomment the line below if you are using output queues of size 2001 to
- *incrementally compute power. In this case, the oldest value is located at
- *location 0 in the output queue, and you compute the current power from 1 to
- *1999 (all output-queue values except value 0. The default is to use a
- *queue-size of 2000.
+ * incrementally compute power. In this case, the oldest value is located at
+ * location 0 in the output queue, and you compute the current power from 1 to
+ * 1999 (all output-queue values except value 0. The default is to use a
+ * queue-size of 2000.
  ****************************************************************************************************/
 //#define FILTER_TEST_STORE_OLD_VALUE_IN_QUEUE
-
-#include "filter.h"
-#ifdef ADC_THROUGH_DETECTOR_FILTER_TEST
-#include "detector.h"
-#include "isr.h"
-#endif
-#include "histogram.h"
-#include "utils.h"
-#include <math.h>
-#include <stdio.h>
 
 /****************************************************************************************************
  * filterTest.c provides a set of self-contained test functions that:
@@ -80,15 +81,14 @@ static uint16_t
     filterTest_firTestTickCounts[FILTER_TEST_OUT_OF_BAND_TICK_COUNT +
                                  FILTER_FREQUENCY_COUNT];
 
-/******************************************************************************************
- ******************************* Start of functions
- ****************************************
- ******************************************************************************************/
+/*******************************************************************************
+***** Start of functions
+*******************************************************************************/
 
 static bool filterTest_initFlag =
     false; // True if the filterTest_init() function was called.
 
-// Everything has an init() function.
+// Initialize filterTest. Called by filterTest_runTest().
 void filterTest_init() {
   // Copy the user and out-of-bound frequency tick counts to the test array.
   for (uint16_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
@@ -247,17 +247,17 @@ double findMin(double values[], uint32_t size) {
   return minValue;
 }
 
+#define ONE_HALF(x) ((x) / 2)      // Divide by 2.
+#define ONE_HALF_FP(x) ((x) / 2.0) // Divide by 2.0
+#define TIMES2_FP(x) ((x)*2.0)     // Floating point multiply by 2.0
+#define PLOT_COLOR DISPLAY_GREEN
+#define PLOT_Y0_LINE_COLOR DISPLAY_WHITE
 // This assumes that the TFT display is in mode 1 (landscape-mode with the
 // origin at the top-left). Incoming data are assumed unipolar: 0 to some max
 // value Incoming data are scaled in X and Y and mapped so that the plotted
 // range is: -1.0 to 1.0. Negative values are plotted on the bottom half of the
 // screen, positive values are plotted on the top-half. A single horizontal line
 // marks the y-value of 0.
-#define ONE_HALF(x) ((x) / 2)      // Divide by 2.
-#define ONE_HALF_FP(x) ((x) / 2.0) // Divide by 2.0
-#define TIMES2_FP(x) ((x)*2.0)     // Floating point multiply by 2.0
-#define PLOT_COLOR DISPLAY_GREEN
-#define PLOT_Y0_LINE_COLOR DISPLAY_WHITE
 void filterTest_plotInputValues(double xValues[], double yValues[],
                                 uint32_t size) {
   // Init the display and set the rotation.
@@ -327,6 +327,11 @@ uint16_t computeAdcBufferInput(uint16_t freqTick,
 }
 #endif
 
+#define PLOT_VALUE_MAX_COUNT                                                   \
+  360 // You can collect up to this many values to plot.
+#define PERIODS_TO_PLOT                                                        \
+  2 // The number of period's worth of data to collect and plot.
+#define INPUT_PLOT_VIEW_DELAY 1000 // The plot will be visible for this long.
 // Plots the frequency response of the FIR filter on the TFT.
 // Everything is defined assuming a 100 kHz sample rate.
 // Frequencies run from 1.1 kHz to 50 kHz.
@@ -334,11 +339,6 @@ uint16_t computeAdcBufferInput(uint16_t freqTick,
 // filter_getFirOutputDebugQueue()). Power is computed internally. Does not use
 // the filter_computePower... functions. To plot the input as well as output,
 // pass true to plotInputFlag.
-#define PLOT_VALUE_MAX_COUNT                                                   \
-  360 // You can collect up to this many values to plot.
-#define PERIODS_TO_PLOT                                                        \
-  2 // The number of period's worth of data to collect and plot.
-#define INPUT_PLOT_VIEW_DELAY 1000 // The plot will be visible for this long.
 void filterTest_runSquareWaveFirPowerTest(bool printMessageFlag,
                                           bool plotInputFlag) {
   if (!filterTest_initFlag) {
@@ -511,12 +511,12 @@ void filterTest_fillQueue(queue_t *q, double fillValue) {
   }
 }
 
+#define FILTER_IIR_POWER_TEST_PERIOD_COUNT FILTER_FREQUENCY_COUNT
 // Plots frequency response for the selected filterNumber against the 10
 // standard frequencies (square-wave). Plots the IIR power for a specific
 // filterNumber for the supplied iirPowerValues. IIR outputs are retrieved via
 // filter_getIirOutputQueue(filterNumber). Power is computed internally. Does
 // not use the filter_compute... functions to compute power.
-#define FILTER_IIR_POWER_TEST_PERIOD_COUNT FILTER_FREQUENCY_COUNT
 void filterTest_runSquareWaveIirPowerTest(uint16_t filterNumber,
                                           bool printMessageFlag) {
   if (!filterTest_initFlag) {
@@ -850,16 +850,16 @@ double filterTest_computeGoldenPowerValue(queue_t *q) {
   return powerValue;
 }
 
+#define TEST_PASS_EPSILON 10E-11 // Should be in this range.
+#define TEST_INCREMENTAL_LOOP_COUNT \
+  3000 // Loop over the incremental test this many times.
+#define OUTPUT_QUEUE_SIZE 2000
 // Performs a test of the filter_computePower() function.
 // This test:
 // 1. fills all 10 IIR output queues with random values,
 // 2. compares the results of filter_computePower with a golden computed output
 //    for all 10 output queues.
 // Tests both forced and incremental modes.
-#define TEST_PASS_EPSILON 10E-11 // Should be in this range.
-#define TEST_INCREMENTAL_LOOP_COUNT \
-  3000 // Loop over the incremental test this many times.
-#define OUTPUT_QUEUE_SIZE 2000
 bool filterTest_runPowerTest() {
   bool firstComputeStatus = true; // Be optimistic.
   filter_init();
@@ -955,6 +955,13 @@ bool filterTest_runPowerTest() {
 //  }
 //}
 
+#define TEN_SECONDS 10000
+#define TWO_SECONDS 2000
+#define FOUR_SECONDS 4000
+#define PRINT_INFO_MESSAGES true
+#define DONT_PRINT_INFO_MESSAGES false
+#define PLOT_INPUT false
+#define TEST_IIR_FILTER_NUMBER 0
 // Performs several tests of the filter code.
 // 1. Test alignment of FIR constants with input.
 // 2. Test the arithmetic performed by the FIR filter.
@@ -963,13 +970,6 @@ bool filterTest_runPowerTest() {
 // 5. Plots the frequency response of each of the IIR bandpass filters on the
 // TFT display. Returns true if all tests passed, false otherwise. Various
 // informational prints are provided in the console during the run of the test.
-#define TEN_SECONDS 10000
-#define TWO_SECONDS 2000
-#define FOUR_SECONDS 4000
-#define PRINT_INFO_MESSAGES true
-#define DONT_PRINT_INFO_MESSAGES false
-#define PLOT_INPUT false
-#define TEST_IIR_FILTER_NUMBER 0
 bool filterTest_runTest() {
   printf("******** filterTest_runTest() **********\n");
   bool success = true; // Be optimistic.

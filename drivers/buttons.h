@@ -13,6 +13,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define BUTTONS_H
 
 #include <stdint.h>
+
 #define BUTTONS_INIT_STATUS_OK 1
 #define BUTTONS_INIT_STATUS_FAIL 0
 #define BUTTONS_BTN0_MASK 0x1
@@ -33,4 +34,4 @@ int32_t buttons_read();
 // simultaneously pressed.
 void buttons_runTest();
 
-#endif
+#endif /* BUTTONS_H */

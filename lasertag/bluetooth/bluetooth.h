@@ -15,6 +15,7 @@
 #define BLUETOOTH_INIT_STATUS_OK 1
 
 // Used to initialize any bluetooth data structures.
+// Must be called before accessing any of the bluetooth_ routines.
 int bluetooth_init();
 
 // Reads characters from the bluetooth buffer. Characters are placed in the
@@ -28,17 +29,17 @@ uint16_t bluetooth_receiveQueueRead(uint8_t *data, uint16_t maxSize);
 // number of characters written.
 uint16_t bluetooth_transmitQueueWrite(uint8_t *data, uint16_t size);
 
-// Starts an interactive loop that queries the user for input, transmits that
-// input to the bluetooth UART and then prints the result. Useful for
-// configuring the bluetooth modem when in command mode. Terminates if the user
-// types a single "." on a line of input.
-void bluetooth_interactiveLoop();
-
 // Polls the bluetooth for data.
 // Received data from the bluetooth UART are placed in the receive queue.
 // Data in the transmit queue are sent to the bluetooth UART.
 // bluetooth UART only operates at 9600 BAUD, so don't call this more than about
 // every 5 ms or so. Presumed that this will be called in a timer ISR.
 void bluetooth_poll();
+
+// Starts an interactive loop that queries the user for input, transmits that
+// input to the bluetooth UART and then prints the result. Useful for
+// configuring the bluetooth modem when in command mode. Terminates if the user
+// types a single "." on a line of input.
+void bluetooth_interactiveLoop();
 
 #endif /* BLUETOOTH_H_ */
