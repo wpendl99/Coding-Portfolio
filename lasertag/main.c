@@ -38,7 +38,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "transmitter.h"
 #include "trigger.h"
 
-
 int main() {
   mio_init(false);  // true enables debug prints
   leds_init(false); // true enables debug prints
@@ -70,13 +69,15 @@ int main() {
   trigger_runTest();
   hitLedTimer_runTest();
   lockoutTimer_runTest();
-  while (1) ; // Forever-while loop. Modify as you see fit.
+  while (1)
+    ; // Forever-while loop. Modify as you see fit.
 #endif
 
 #ifdef RUNNING_MODE_M3_T3
   // The program comes up in continuous mode.
   // Hold BTN2 while the program starts to come up in shooter mode.
-  if (buttons_read() & BUTTONS_BTN2_MASK) { // Read the buttons to see if BTN2 is depressed.
+  if (buttons_read() &
+      BUTTONS_BTN2_MASK) { // Read the buttons to see if BTN2 is depressed.
     printf("Starting shooter mode\n");
     runningModes_shooter(); // Run shooter mode if BTN2 is depressed.
   } else {
