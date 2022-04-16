@@ -24,16 +24,17 @@ typedef uint16_t detector_hitCount_t;
 void detector_init(bool ignoredFrequencies[]);
 
 // Runs the entire detector: decimating fir-filter, iir-filters,
-// power-computation, hit-detection. if interruptsCurrentlyEnabled = true, interrupts
-// are running. If interruptsCurrentlyEnabled = false you can pop values from the
-// ADC buffer without disabling interrupts. If interruptsCurrentlyEnabled = true,
-// do the following:
+// power-computation, hit-detection. if interruptsCurrentlyEnabled = true,
+// interrupts are running. If interruptsCurrentlyEnabled = false you can pop
+// values from the ADC buffer without disabling interrupts. If
+// interruptsCurrentlyEnabled = true, do the following:
 // 1. disable interrupts.
 // 2. pop the value from the ADC buffer.
 // 3. re-enable interrupts.
-// Ignore hits that are detected on the frequencies specified during detector_init().
-// Your own frequency (based on the switches) is a good choice to ignore.
-// Assumption: draining the ADC buffer occurs faster than it can fill.
+// Ignore hits that are detected on the frequencies specified during
+// detector_init(). Your own frequency (based on the switches) is a good choice
+// to ignore. Assumption: draining the ADC buffer occurs faster than it can
+// fill.
 void detector(bool interruptsCurrentlyEnabled);
 
 // Returns true if a hit was detected.

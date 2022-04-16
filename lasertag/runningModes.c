@@ -129,7 +129,8 @@ void runningModes_printRunTimeStatistics() {
   display_print("Cumulative run-time in detector: ");
   sprintf(sprintfBuffer, "%5.2f", mainLoopRunningSeconds);
   display_print(sprintfBuffer);
-  sprintf(sprintfBuffer, "%5.2f", mainLoopRunningSeconds / runningSeconds * 100);
+  sprintf(sprintfBuffer, "%5.2f",
+          mainLoopRunningSeconds / runningSeconds * 100);
   display_print(" (");
   display_print(sprintfBuffer);
   display_println("%)");
@@ -175,7 +176,8 @@ void runningModes_initAll() {
   intervalTimer_initAll();
   histogram_init(HISTOGRAM_BAR_COUNT);
   filter_init();
-  isr_init(); // includes: transmitter, trigger, hitLedTimer, lockoutTimer, & sound init
+  isr_init(); // includes: transmitter, trigger, hitLedTimer, lockoutTimer, &
+              // sound init
 }
 
 // Returns the current switch-setting

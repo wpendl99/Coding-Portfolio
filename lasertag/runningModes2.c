@@ -9,9 +9,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #include <stdio.h>
 
-#include "runningModes.h"
-#include "interrupts.h"
 #include "hitLedTimer.h"
+#include "interrupts.h"
+#include "runningModes.h"
 
 /*
 This file (runningModes2.c) is separated from runningModes.c so that

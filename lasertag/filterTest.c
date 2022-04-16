@@ -29,7 +29,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "utils.h"
 
 /****************************************************************************************************
- * Uncomment the line below if your IIR-A coefficient arrays contain a leading '1'.
+ * Uncomment the line below if your IIR-A coefficient arrays contain a leading
+ *'1'.
  ****************************************************************************************************/
 //#define FILTER_TEST_USED_LEADING_1_IN_IIR_A_COEFFICIENT_ARRAY
 
@@ -851,7 +852,7 @@ double filterTest_computeGoldenPowerValue(queue_t *q) {
 }
 
 #define TEST_PASS_EPSILON 10E-11 // Should be in this range.
-#define TEST_INCREMENTAL_LOOP_COUNT \
+#define TEST_INCREMENTAL_LOOP_COUNT                                            \
   3000 // Loop over the incremental test this many times.
 #define OUTPUT_QUEUE_SIZE 2000
 // Performs a test of the filter_computePower() function.

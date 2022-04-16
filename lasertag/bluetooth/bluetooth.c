@@ -8,11 +8,11 @@
 // DONT COMPILE AND LINK THIS INTO YOUR PROJECT.
 // IT IS ALREADY COMPILED INTO THE LASERTAG LIBRARY.
 
-#include <stdio.h>
 #include <Xuartlite.h>
+#include <stdio.h>
 
-#include "xparameters.h"
 #include "bluetooth.h"
+#include "xparameters.h"
 
 static XUartLite bluetooth_uartInstance; // Handle to the bluetooth UART.
 static XUartLite_Config
