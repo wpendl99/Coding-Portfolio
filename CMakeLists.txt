@@ -22,7 +22,6 @@ if (NOT EMU)
     link_directories(platforms/zybo)
     link_directories(platforms/zybo/xil_arm_toolchain)
 
-    # Provide a pre-compiled, known-good intervalTimer, buttons, switches, queue.
     # Only use this for lasertag.
     # link_directories(platforms/zybo/lasertag_libs)
 
