@@ -9,21 +9,26 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #ifndef LOCKOUTTIMER_H_
 #define LOCKOUTTIMER_H_
+
 #include <stdbool.h>
 
-#define LOCKOUT_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
+// The lockoutTimer is active for 1/2 second once it is started.
+// It is used to lock-out the detector once a hit has been detected.
+// This ensures that only one hit is detected per 1/2-second interval.
 
-// Calling this starts the timer.
-void lockoutTimer_start();
+#define LOCKOUT_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
 
 // Perform any necessary inits for the lockout timer.
 void lockoutTimer_init();
 
-// Returns true if the timer is running.
-bool lockoutTimer_running();
-
 // Standard tick function.
 void lockoutTimer_tick();
+
+// Calling this starts the timer.
+void lockoutTimer_start();
+
+// Returns true if the timer is running.
+bool lockoutTimer_running();
 
 // Test function assumes interrupts have been completely enabled and
 // lockoutTimer_tick() function is invoked by isr_function().

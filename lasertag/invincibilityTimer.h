@@ -13,16 +13,16 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdbool.h>
 #include <stdint.h>
 
-// Calling this starts the timer.
-void invincibilityTimer_start(uint16_t seconds);
-
 // Perform any necessary inits for the invincibility timer.
 void invincibilityTimer_init();
 
-// Returns true if the timer is running.
-bool invincibilityTimer_running();
-
 // Standard tick function.
 void invincibilityTimer_tick();
+
+// Calling this starts the timer.
+void invincibilityTimer_start(uint16_t seconds);
+
+// Returns true if the timer is running.
+bool invincibilityTimer_running();
 
 #endif /* INVINCIBILITYTIMER_H_ */

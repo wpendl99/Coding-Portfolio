@@ -10,10 +10,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef TRANSMITTER_H_
 #define TRANSMITTER_H_
 
-#define TRANSMITTER_OUTPUT_PIN 13     // JF1 (pg. 25 of ZYBO reference manual).
-#define TRANSMITTER_PULSE_WIDTH 20000 // Based on a system tick-rate of 100 kHz.
 #include <stdbool.h>
 #include <stdint.h>
+
+#define TRANSMITTER_OUTPUT_PIN 13     // JF1 (pg. 25 of ZYBO reference manual).
+#define TRANSMITTER_PULSE_WIDTH 20000 // Based on a system tick-rate of 100 kHz.
 
 // The transmitter state machine generates a square wave output at the chosen
 // frequency as set by transmitter_setFrequencyNumber(). The step counts for the
@@ -22,7 +23,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Standard init function.
 void transmitter_init();
 
-// Starts the transmitter.
+// Standard tick function.
+void transmitter_tick();
+
+// Activate the transmitter.
 void transmitter_run();
 
 // Returns true if the transmitter is still running.
@@ -36,20 +40,17 @@ void transmitter_setFrequencyNumber(uint16_t frequencyNumber);
 // Returns the current frequency setting.
 uint16_t transmitter_getFrequencyNumber();
 
-// Standard tick function.
-void transmitter_tick();
-
 // Tests the transmitter.
 void transmitter_runTest();
 
 // Runs the transmitter continuously.
-// if continuousModeFlag == true, transmitter runs continuously, otherwise,
-// transmits one pulse-width and stops. To set continuous mode, you must invoke
-// this function prior to calling transmitter_run(). If the transmitter is in
+// if continuousModeFlag == true, transmitter runs continuously, otherwise, it
+// transmits one burst and stops. To set continuous mode, you must invoke
+// this function prior to calling transmitter_run(). If the transmitter is
 // currently in continuous mode, it will stop running if this function is
 // invoked with continuousModeFlag == false. It can stop immediately or wait
-// until the last 200 ms pulse is complete. NOTE: while running continuously,
-// the transmitter will change frequencies at the end of each 200 ms pulse.
+// until a 200 ms burst is complete. NOTE: while running continuously,
+// the transmitter will only change frequencies in between 200 ms bursts.
 void transmitter_setContinuousMode(bool continuousModeFlag);
 
 // Tests the transmitter in non-continuous mode.
@@ -67,7 +68,7 @@ void transmitter_runNoncontinuousTest();
 // prior to running this test.
 // Transmitter should continuously generate the proper waveform
 // at the transmitter-probe pin and change frequencies
-// in response to changes to the changes in the slide switches.
+// in response to changes in the slide switches.
 // Test runs until BTN1 is pressed.
 void transmitter_runContinuousTest();
 

@@ -10,7 +10,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef FILTERTEST_H_
 #define FILTERTEST_H_
 
-// Invoke init before calling filterTest_runTest().
+// Initialize filterTest. Called by filterTest_runTest().
 void filterTest_init();
 
 // Performs a comprehensive test of the FIR, IIR filters and plots frequency

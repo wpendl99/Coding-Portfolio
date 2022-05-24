@@ -10,8 +10,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef FILTER_H_
 #define FILTER_H_
 
-#include "queue.h"
 #include <stdint.h>
+
+#include "queue.h"
 
 #define FILTER_SAMPLE_FREQUENCY_IN_KHZ 100
 #define FILTER_FREQUENCY_COUNT 10
@@ -35,10 +36,9 @@ static const uint16_t filter_frequencyTickTable[FILTER_FREQUENCY_COUNT] = {
 // 2. The output from the decimating FIR filter is passed through a bank of 10
 // IIR filters. The characteristics of the IIR filter are fixed.
 
-/*********************************************************************************************************
-****************************************** Main Filter Functions
-******************************************
-**********************************************************************************************************/
+/*******************************************************************************
+***** Main Filter Functions
+*******************************************************************************/
 
 // Must call this prior to using any filter functions.
 void filter_init();
@@ -80,6 +80,9 @@ double filter_computePower(uint16_t filterNumber, bool forceComputeFromScratch,
 // [filterNumber].
 double filter_getCurrentPowerValue(uint16_t filterNumber);
 
+// Sets a current power value for a specific filter number.
+void filter_setCurrentPowerValue(uint16_t filterNumber, double value);
+
 // Get a copy of the current power values.
 // This function copies the already computed values into a previously-declared
 // array so that they can be accessed from outside the filter software by the
@@ -94,14 +97,11 @@ void filter_getCurrentPowerValues(double powerValues[]);
 void filter_getNormalizedPowerValues(double normalizedArray[],
                                      uint16_t *indexOfMaxValue);
 
-/*********************************************************************************************************
-********************************** Verification-assisting functions.
-**************************************
-********* Test functions access the internal data structures of the filter.c via
-*these functions. ********
-*********************** These functions are not used by the main filter
-*functions. ***********************
-**********************************************************************************************************/
+/*******************************************************************************
+***** Verification-Assisting Functions
+***** External test functions access the internal data structures of filter.c
+***** via these functions. They are not used by the main filter functions.
+*******************************************************************************/
 
 // Returns the array of FIR coefficients.
 const double *filter_getFirCoefficientArray();
@@ -138,7 +138,5 @@ queue_t *filter_getZQueue(uint16_t filterNumber);
 
 // Returns the address of the IIR output-queue for a specific filter-number.
 queue_t *filter_getIirOutputQueue(uint16_t filterNumber);
-
-// void filter_runTest();
 
 #endif /* FILTER_H_ */

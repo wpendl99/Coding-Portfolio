@@ -7,32 +7,28 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#include "runningModes.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "buttons.h"
 #include "detector.h"
 #include "display.h"
-#include "buttons.h"
-#include "switches.h"
 #include "filter.h"
 #include "histogram.h"
 #include "hitLedTimer.h"
 #include "interrupts.h"
 #include "intervalTimer.h"
 #include "isr.h"
-#include "ledTimer.h"
-#include "leds.h"
 #include "lockoutTimer.h"
-#include "mio.h"
-#include "queue.h"
-#include "sound.h"
+#include "runningModes.h"
+#include "switches.h"
 #include "transmitter.h"
 #include "trigger.h"
 #include "utils.h"
 #include "xparameters.h"
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 // Uncomment this code so that the code in the various modes will
 // ignore your own frequency. You still must properly implement
@@ -76,7 +72,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define INTERRUPTS_CURRENTLY_DISABLE false
 
 // Keep track of detector invocations.
-static uint32_t detectorInvocationCount = 0;
+uint32_t detectorInvocationCount = 0;
 
 // This array is indexed by frequency number. If array-element[freq_no] == true,
 // the frequency is ignored, e.g., no hit will ever occur at that frequency.
@@ -131,7 +127,10 @@ void runningModes_printRunTimeStatistics() {
       intervalTimer_getTotalDurationInSeconds(MAIN_CUMULATIVE_TIMER);
   // Print out cumulative spent in detector.
   display_print("Cumulative run-time in detector: ");
-  sprintf(sprintfBuffer, "%5.2f", mainLoopRunningSeconds / runningSeconds);
+  sprintf(sprintfBuffer, "%5.2f", mainLoopRunningSeconds);
+  display_print(sprintfBuffer);
+  sprintf(sprintfBuffer, "%5.2f",
+          mainLoopRunningSeconds / runningSeconds * 100);
   display_print(" (");
   display_print(sprintfBuffer);
   display_println("%)");
@@ -173,19 +172,12 @@ void runningModes_printRunTimeStatistics() {
 
 // Group all of the inits together to reduce visual clutter.
 void runningModes_initAll() {
-  buttons_init();
-  switches_init();
-  mio_init(false);
+  // assume mio, leds, buttons, & switches initialized in main.c
   intervalTimer_initAll();
   histogram_init(HISTOGRAM_BAR_COUNT);
-  leds_init(true);
-  transmitter_init();
   filter_init();
-  isr_init();
-  hitLedTimer_init();
-  trigger_init();
-  lockoutTimer_init();
-  sound_init();
+  isr_init(); // includes: transmitter, trigger, hitLedTimer, lockoutTimer, &
+              // sound init
 }
 
 // Returns the current switch-setting
@@ -200,8 +192,8 @@ uint16_t runningModes_getFrequencySetting() {
 
 // This mode runs continuously until btn3 is pressed.
 // When btn3 is pressed, it exits and prints performance information to the TFT.
-// During operation, it continuously displays that received power on each
-// channel, on the TFT.
+// During operation, it continuously displays the received power for each
+// channel on the TFT. Transmit frequency is selected via the slide-switches.
 void runningModes_continuous() {
   runningModes_initAll(); // All necessary inits are called here.
   bool ignoredFrequenciesArray[FILTER_FREQUENCY_COUNT];
@@ -264,6 +256,11 @@ void runningModes_continuous() {
   runningModes_printRunTimeStatistics(); // Print the run-time statistics.
 }
 
+// This mode runs continuously until btn3 is pressed.
+// When btn3 is pressed, it exits and prints performance information to the TFT.
+// Game-playing mode. Each shot is registered on the histogram on the TFT.
+// Press BTN0 or the gun-trigger to shoot.
+// Transmit frequency is selected via the slide-switches.
 void runningModes_shooter() {
   runningModes_initAll();
   // Init the ignored-frequencies so no frequencies are ignored.
@@ -328,9 +325,8 @@ void runningModes_shooter() {
 }
 
 // This mode simply dumps raw ADC values to the console.
-// I wrote this to determine if bipolar mode was working for the ADC.
-// Just loops forever, you must manually stop the program with an external
-// reset.
+// It can be used to determine if bipolar mode is working for the ADC.
+// Will loop forever. Stop the program with an external reset or Ctl-C.
 void runningModes_dumpRawAdcValues() {
   runningModes_initAll();
   interrupts_initAll(true); // Sets up interrupts and the XADC.

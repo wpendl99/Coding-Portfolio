@@ -19,13 +19,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uncomment to run two-player mode, Milestone 5
 // #define RUNNING_MODE_M5
 
-// The following line enables the main() contained in laserTagMain.c
-// Leave this line uncommented unless you want to run some other special test
-// main().
-#define LASER_TAG_MAIN
-
-#ifdef LASER_TAG_MAIN
-
 #include <assert.h>
 #include <stdio.h>
 
@@ -36,17 +29,23 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "hitLedTimer.h"
 #include "interrupts.h"
 #include "isr.h"
+#include "leds.h"
 #include "lockoutTimer.h"
+#include "mio.h"
 #include "runningModes.h"
 #include "sound.h"
 #include "switches.h"
 #include "transmitter.h"
 #include "trigger.h"
-#include "detector.h"
 
 int main() {
+  mio_init(false);  // true enables debug prints
+  leds_init(false); // true enables debug prints
+  buttons_init();
+  switches_init();
 
 #ifdef RUNNING_MODE_TESTS
+  // interrupts not needed for these tests
   queue_runTest(); // M1
   // filterTest_runTest(); // M3 T1
   // transmitter_runTest(); // M3 T2
@@ -55,8 +54,9 @@ int main() {
 #endif
 
 #ifdef RUNNING_MODE_M3_T2
-  buttons_init();
-  switches_init();
+  // add transmitter, trigger, hitLedTimer, lockoutTimer,
+  // and sound init functions to isr_init(), i.e. anything
+  // with _tick() functions.
   isr_init();
 
   interrupts_initAll(true);           // main interrupt init function.
@@ -69,14 +69,15 @@ int main() {
   trigger_runTest();
   hitLedTimer_runTest();
   lockoutTimer_runTest();
-  while (1) ; // Forever-while loop. Modify as you see fit.
+  while (1)
+    ; // Forever-while loop. Modify as you see fit.
 #endif
 
 #ifdef RUNNING_MODE_M3_T3
   // The program comes up in continuous mode.
   // Hold BTN2 while the program starts to come up in shooter mode.
-  buttons_init(); // Init the buttons.
-  if (buttons_read() & BUTTONS_BTN2_MASK) { // Read the buttons to see if BTN2 is depressed.
+  if (buttons_read() &
+      BUTTONS_BTN2_MASK) { // Read the buttons to see if BTN2 is depressed.
     printf("Starting shooter mode\n");
     runningModes_shooter(); // Run shooter mode if BTN2 is depressed.
   } else {
@@ -92,5 +93,3 @@ int main() {
 
   return 0;
 }
-
-#endif // LASER_TAG_MAIN

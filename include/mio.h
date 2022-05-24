@@ -11,9 +11,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #ifndef MIO_H_
 #define MIO_H_
-#include "xil_types.h"
+
 #include <stdbool.h>
 #include <stdint.h>
+
+#include "xil_types.h"
 
 // Provides an API for easy access to various MIO pins as they are allocated on
 // the ZYBO board. This includes LED4 and BTN4 and BTN5.

@@ -28,6 +28,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Need to init things.
 void autoReloadTimer_init();
 
+// Standard tick function.
+void autoReloadTimer_tick();
+
 // Calling this starts the timer.
 void autoReloadTimer_start();
 
@@ -36,8 +39,5 @@ bool autoReloadTimer_running();
 
 // Disables the autoReloadTimer and re-initializes it.
 void autoReloadTimer_cancel();
-
-// Standard tick function.
-void autoReloadTimer_tick();
 
 #endif /* AUTORELOADTIMER_H_ */

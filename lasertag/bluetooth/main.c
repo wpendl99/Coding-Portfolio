@@ -1,10 +1,12 @@
 //#include "Adafruit_BluefruitLE_UART.h"
+
+#include <ctype.h>
+
 #include "bluetooth.h"
 #include "display.h"
 #include "interrupts.h"
 #include "utils.h"
 #include "xparameters.h"
-#include <ctype.h>
 
 #define BUFSIZE 1000
 #define TEXT_SIZE 2

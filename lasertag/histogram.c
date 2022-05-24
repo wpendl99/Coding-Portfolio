@@ -7,14 +7,15 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#include "histogram.h"
-#include "display.h"
-#include "filter.h"
-#include "utils.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "display.h"
+#include "filter.h"
+#include "histogram.h"
+#include "utils.h"
 
 #define TOP_LABEL_TEXT_SIZE 1
 #define HISTOGRAM_DEFAULT_BAR_COUNT 10

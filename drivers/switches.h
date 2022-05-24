@@ -35,4 +35,4 @@ int32_t switches_read();
 // return.
 void switches_runTest();
 
-#endif
+#endif /* SWITCHES_H */
