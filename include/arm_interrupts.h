@@ -9,6 +9,9 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
+#ifndef INCLUDE_ARM_INTERRUPTS
+#define INCLUDE_ARM_INTERRUPTS
+
 #ifndef INTERRUPTS_H_
 #define INTERRUPTS_H_
 
@@ -164,3 +167,5 @@ extern volatile int interrupts_isrFlagGlobal;
 #endif /* ZYBO_BOARD */
 
 #endif /* INTERRUPTS_H_ */
+
+#endif /* INCLUDE_ARM_INTERRUPTS */

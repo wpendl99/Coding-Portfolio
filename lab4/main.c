@@ -13,11 +13,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include <stdio.h>
 
+#include "arm_interrupts.h"
 #include "clockControl.h"
 #include "clockDisplay.h"
 #include "config.h"
 #include "display.h"
-#include "interrupts.h"
 #include "leds.h"
 #include "utils.h"
 #include "xparameters.h"
@@ -73,8 +73,10 @@ int main() {
   // Prints an error message if an internal failure occurs because the
   // argument = true.
   interrupts_initAll(true);
-  interrupts_setPrivateTimerLoadValue(TIMER_LOAD_VALUE);
-  interrupts_enableTimerGlobalInts();
+
+  // interrupts_setPrivateTimerLoadValue(TIMER_LOAD_VALUE);
+  // interrupts_enableTimerGlobalInts();
+
   // Initialization of the clock display is not time-dependent, do it outside
   // of the state machine.
   clockDisplay_init();
@@ -108,4 +110,8 @@ int main() {
 // Keep this empty
 // The 'interrupts_isrFlagGlobal' flag will be automatically set on an interrupt
 // behind the scenes.  We don't need to set it here.
-void isr_function() {}
+
+void isr_function() {
+  // Call our interrupt handler function
+  intc_isr();
+}
