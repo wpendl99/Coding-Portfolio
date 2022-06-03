@@ -9,6 +9,7 @@ a.out
 *.log
 *.jou
 *.html
+*.Xil
 
 # Check and zip generated files
 /test_repo

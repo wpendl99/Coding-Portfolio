@@ -15,7 +15,7 @@ LABS_DIR = pathlib.Path(__file__).resolve().parent
 
 
 class TermColors:
-    """ Terminal codes for printing in color """
+    """Terminal codes for printing in color"""
 
     PURPLE = "\033[95m"
     BLUE = "\033[94m"
@@ -28,12 +28,12 @@ class TermColors:
 
 
 def print_color(color, *msg):
-    """ Print a message in color """
+    """Print a message in color"""
     print(color + " ".join(str(item) for item in msg), TermColors.END)
 
 
 def error(*msg, returncode=-1):
-    """ Print an error message and exit program """
+    """Print an error message and exit program"""
     print_color(TermColors.RED, "ERROR:", *msg)
     sys.exit(returncode)
 

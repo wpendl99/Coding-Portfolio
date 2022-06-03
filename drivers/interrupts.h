@@ -14,6 +14,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #include <stdint.h>
 
+#define INTERRUPTS_IRQ_TIMER_0 0
+#define INTERRUPTS_IRQ_TIMER_1 1
+#define INTERRUPTS_IRQ_TIMER_2 2
+
 // Initialize interrupt hardware
 int32_t interrupts_init();
 

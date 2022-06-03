@@ -18,6 +18,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "clockDisplay.h"
 #include "config.h"
 #include "display.h"
+#include "interrupts.h"
 #include "leds.h"
 #include "utils.h"
 #include "xparameters.h"
@@ -28,7 +29,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 ////////////////////////////////////////////////////////////////////////////////
 // Uncomment one of the following lines to run Milestone 1 or 2      ///////////
 ////////////////////////////////////////////////////////////////////////////////
-// #define RUN_PROGRAM MILESTONE_1
+#define RUN_PROGRAM MILESTONE_1
 // #define RUN_PROGRAM MILESTONE_2
 
 // If nothing is uncommented above, run milestone 2
@@ -59,7 +60,9 @@ uint32_t isr_functionCallCount = 0;
 int main() {
 #if (RUN_PROGRAM == MILESTONE_1)
   printf(RUN_DISPLAY_TEST_MSG);
-  clockDisplay_runTest();
+  // clockDisplay_runTest();
+
+  intc_irq_enable(1 << INTERRUPTS_IRQ_TIMER_0);
 
 #elif (RUN_PROGRAM == MILESTONE_2)
   // This main() uses the flag method to invoke clockControl_tick().
@@ -84,10 +87,13 @@ int main() {
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
   int32_t personalInterruptCount = 0;
+
   // Start the private ARM timer running.
-  interrupts_startArmPrivateTimer();
+  // interrupts_startArmPrivateTimer();
+
   // Enable interrupts at the ARM.
   interrupts_enableArmInts();
+
   while (1) {
     if (interrupts_isrFlagGlobal) {
       // Count ticks.

@@ -80,12 +80,12 @@ int interrupts_disableArmInts();
 int interrupts_enableTimerGlobalInts();
 int interrupts_disableTimerGlobalInts();
 
-int interrupts_startArmPrivateTimer();
-int interrupts_stopArmPrivateTimer();
+// int interrupts_startArmPrivateTimer();
+// int interrupts_stopArmPrivateTimer();
 
-u32 interrupts_getPrivateTimerCounterValue(void);
-void interrupts_setPrivateTimerLoadValue(u32 loadValue);
-void interrupts_setPrivateTimerPrescalerValue(u32 prescalerValue);
+// u32 interrupts_getPrivateTimerCounterValue(void);
+// void interrupts_setPrivateTimerLoadValue(u32 loadValue);
+// void interrupts_setPrivateTimerPrescalerValue(u32 prescalerValue);
 
 // Globally enable/disable SysMon interrupts.
 int interrupts_enableSysMonGlobalInts();
