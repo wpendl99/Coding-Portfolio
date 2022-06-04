@@ -12,8 +12,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Provides an API for accessing the three hardware timers that are installed
 // in the ZYNQ fabric.
 
-#ifndef INTERVALTIMER_H_
-#define INTERVALTIMER_H_
+#ifndef DRIVERS_INTERVALTIMER
+#define DRIVERS_INTERVALTIMER
 
 #include <stdint.h>
 
@@ -33,12 +33,9 @@ typedef uint32_t
 // is called multiple times.
 // timerNumber indicates which timer should be initialized.
 // returns INTERVAL_TIMER_STATUS_OK if successful, some other value otherwise.
-intervalTimer_status_t intervalTimer_init(uint32_t timerNumber);
-
-// This is a convenience function that initializes all interval timers.
-// Simply calls intervalTimer_init() on all timers.
-// returns INTERVAL_TIMER_STATUS_OK if successful, some other value otherwise.
-intervalTimer_status_t intervalTimer_initAll();
+intervalTimer_status_t intervalTimer_initCountUp(uint32_t timerNumber);
+intervalTimer_status_t intervalTimer_initCountDown(uint32_t timerNumber,
+                                                   double period);
 
 // This function starts the interval timer running.
 // If the interval timer is already running, this function does nothing.
@@ -54,19 +51,7 @@ void intervalTimer_stop(uint32_t timerNumber);
 // For example, say the interval timer has been used in the past, the user
 // will call intervalTimer_reset() prior to calling intervalTimer_start().
 // timerNumber indicates which timer should reset.
-void intervalTimer_reset(uint32_t timerNumber);
-
-// Convenience function for intervalTimer_reset().
-// Simply calls intervalTimer_reset() on all timers.
-void intervalTimer_resetAll();
-
-// Runs a test on a single timer as indicated by the timerNumber argument.
-// Returns INTERVAL_TIMER_STATUS_OK if successful, something else otherwise.
-intervalTimer_status_t intervalTimer_test(uint32_t timerNumber);
-
-// Convenience function that invokes test on all interval timers.
-// Returns INTERVAL_TIMER_STATUS_OK if successful, something else otherwise.
-intervalTimer_status_t intervalTimer_testAll();
+void intervalTimer_reload(uint32_t timerNumber);
 
 // Use this function to ascertain how long a given timer has been running.
 // Note that it should not be an error to call this function on a running timer
@@ -74,4 +59,12 @@ intervalTimer_status_t intervalTimer_testAll();
 // has been called. The timerNumber argument determines which timer is read.
 double intervalTimer_getTotalDurationInSeconds(uint32_t timerNumber);
 
-#endif /* INTERVALTIMER_H_ */
+void intervalTimer_enableInterrupt(uint8_t timerNumber);
+
+void intervalTimer_disableInterrupt(uint8_t timerNumber);
+
+void intervalTimer_setCountUp(uint8_t timerNumber);
+
+void intervalTimer_setCountDown(uint8_t timerNumber);
+
+#endif /* DRIVERS_INTERVALTIMER */

@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef DRIVERS_INTERRUPTS
-#define DRIVERS_INTERRUPTS
+#ifndef STUDENT_DRIVERS_INTERRUPTS
+#define STUDENT_DRIVERS_INTERRUPTS
 
 #include <stdint.h>
 
@@ -25,10 +25,11 @@ int32_t interrupts_init();
 // irq_mask: Bitmask of lines to enable
 // This function only enables interrupt lines, ie, a 0 bit in irq_mask
 //	will not disable the interrupt line
-void intc_irq_enable(uint8_t irq_mask);
+void interrupts_irq_enable(uint8_t irq_mask);
+void interrupts_irq_disable(uint8_t irq_mask);
 
-void intc_register(uint8_t irq, void (*fcn)());
+void interrupts_register(uint8_t irq, void (*fcn)());
 
-void intc_isr();
+void interrupts_isr();
 
-#endif /* DRIVERS_INTERRUPTS */
+#endif /* STUDENT_DRIVERS_INTERRUPTS */

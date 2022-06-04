@@ -62,7 +62,7 @@ int main() {
   printf(RUN_DISPLAY_TEST_MSG);
   // clockDisplay_runTest();
 
-  intc_irq_enable(1 << INTERRUPTS_IRQ_TIMER_0);
+  interrupts_irq_enable(1 << INTERRUPTS_IRQ_TIMER_0);
 
 #elif (RUN_PROGRAM == MILESTONE_2)
   // This main() uses the flag method to invoke clockControl_tick().
@@ -119,5 +119,5 @@ int main() {
 
 void isr_function() {
   // Call our interrupt handler function
-  intc_isr();
+  interrupts_isr();
 }
