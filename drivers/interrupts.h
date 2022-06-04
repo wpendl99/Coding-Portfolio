@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef STUDENT_DRIVERS_INTERRUPTS
-#define STUDENT_DRIVERS_INTERRUPTS
+#ifndef DRIVERS_INTERRUPTS
+#define DRIVERS_INTERRUPTS
 
 #include <stdint.h>
 
@@ -30,6 +30,10 @@ void interrupts_irq_disable(uint8_t irq_mask);
 
 void interrupts_register(uint8_t irq, void (*fcn)());
 
-void interrupts_isr();
+void interrupts_isr(void *context);
 
-#endif /* STUDENT_DRIVERS_INTERRUPTS */
+uint32_t interrupts_pending();
+
+void interrupts_ack(uint8_t irq_mask);
+
+#endif /* DRIVERS_INTERRUPTS */

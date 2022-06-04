@@ -433,6 +433,16 @@
 
 /******************************************************************/
 
+/* Definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_AXI_INTC_0_IRQ_INTR 91U
+
+/******************************************************************/
+
+/* Canonical definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_INTC_0_VEC_ID XPAR_FABRIC_AXI_INTC_0_IRQ_INTR
+
+/******************************************************************/
+
 /* Definitions for driver SCUGIC */
 #define XPAR_XSCUGIC_NUM_INSTANCES 1U
 

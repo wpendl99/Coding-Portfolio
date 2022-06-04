@@ -19,8 +19,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "config.h"
 #include "display.h"
 #include "interrupts.h"
+#include "intervalTimer.h"
+#include "lab4.h"
 #include "leds.h"
 #include "utils.h"
+#include "xil_io.h"
 #include "xparameters.h"
 
 #define MILESTONE_1 1
@@ -37,7 +40,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define RUN_PROGRAM MILESTONE_2
 #endif
 
-#define RUN_DISPLAY_TEST_MSG "Running Milestone 1: clockDisplay_test()\n"
+#define RUN_DISPLAY_TEST_MSG "========== Running Milestone 1 ==========\n"
 #define RUN_MILESTONE_2_MSG "Running Milestone 2: full clock lab\n"
 
 // The formula for computing the load value is based upon the formula
@@ -56,13 +59,21 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Keep track of how many times isr_function() is called.
 uint32_t isr_functionCallCount = 0;
 
+extern volatile int interrupt_occurred;
+
 // This main uses isr_function() to invoked clockControl_tick().
 int main() {
 #if (RUN_PROGRAM == MILESTONE_1)
-  printf(RUN_DISPLAY_TEST_MSG);
-  // clockDisplay_runTest();
 
-  interrupts_irq_enable(1 << INTERRUPTS_IRQ_TIMER_0);
+  printf(RUN_DISPLAY_TEST_MSG);
+
+  leds_init();
+  interrupts_initAll(true);
+  interrupts_enableArmInts();
+
+  lab4_main();
+
+  printf("========== Milestone done ==========\n");
 
 #elif (RUN_PROGRAM == MILESTONE_2)
   // This main() uses the flag method to invoke clockControl_tick().
@@ -119,5 +130,5 @@ int main() {
 
 void isr_function() {
   // Call our interrupt handler function
-  interrupts_isr();
+  // interrupts_isr();
 }

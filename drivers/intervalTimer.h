@@ -15,6 +15,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef DRIVERS_INTERVALTIMER
 #define DRIVERS_INTERVALTIMER
 
+#include <stdbool.h>
 #include <stdint.h>
 
 // Used to indicate status that can be checked after invoking the function.
@@ -66,5 +67,9 @@ void intervalTimer_disableInterrupt(uint8_t timerNumber);
 void intervalTimer_setCountUp(uint8_t timerNumber);
 
 void intervalTimer_setCountDown(uint8_t timerNumber);
+
+bool intervalTimer_rolledOver(uint8_t timerNumber);
+
+void intervalTimer_ackInterrupt(uint8_t timerNumber);
 
 #endif /* DRIVERS_INTERVALTIMER */
