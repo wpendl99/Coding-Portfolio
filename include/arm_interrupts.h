@@ -73,6 +73,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 int arm_interrupts_init();
 
 void arm_interrupts_register_intc_isr(void (*axi_intc_isr)());
+void arm_interrupts_register_arm_timer_isr(void (*arm_timer_isr)());
 
 // Used to enable and disable ARM ints.
 int arm_interrupts_enable();
