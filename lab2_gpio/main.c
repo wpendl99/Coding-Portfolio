@@ -12,6 +12,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "drivers/buttons.h"
 #include "drivers/switches.h"
 
+#include "lab2.h"
+
 // Run switches and buttons runTest functions
 int main() {
   switches_runTest();
