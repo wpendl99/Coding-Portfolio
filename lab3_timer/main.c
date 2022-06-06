@@ -234,6 +234,3 @@ int main() {
 #endif
   return 0;
 }
-
-// Interrupt Routine
-void isr_function() {}

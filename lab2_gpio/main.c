@@ -21,8 +21,3 @@ int main() {
 
   return 0;
 }
-
-// Interrupt routine
-void isr_function() {
-  // Empty for now.
-}

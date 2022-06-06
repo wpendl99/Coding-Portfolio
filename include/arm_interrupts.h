@@ -70,11 +70,13 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // 4. Pretty much does everything but it does not enable the ARM interrupts or
 // any of the device global interrupts. if printFailedStatusFlag is true, it
 // prints out diagnostic messages if something goes awry.
-int interrupts_initAll(bool printFailedStatusFlag);
+int arm_interrupts_init();
+
+void arm_interrupts_register_intc_isr(void (*axi_intc_isr)());
 
 // Used to enable and disable ARM ints.
-int interrupts_enableArmInts();
-int interrupts_disableArmInts();
+int arm_interrupts_enable();
+int arm_interrupts_disable();
 
 // Useeed to enable and disable the global timer int output.
 int interrupts_enableTimerGlobalInts();
@@ -110,7 +112,7 @@ uint32_t interrupts_getAdcData();
 
 // u32 interrupts_getTotalXadcSampleCount();
 u32 interrupts_getTotalEocCount();
-void isr_function();
+// void isr_function();
 
 // Init/Enable/disable interrupts for the bluetooth radio (RDYN line).
 uint32_t interrupts_initBluetoothInterrupts();

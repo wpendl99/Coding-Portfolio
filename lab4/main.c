@@ -67,10 +67,6 @@ int main() {
 
   printf(RUN_DISPLAY_TEST_MSG);
 
-  leds_init();
-  interrupts_initAll(true);
-  interrupts_enableArmInts();
-
   lab4_main();
 
   printf("========== Milestone done ==========\n");
