@@ -159,8 +159,6 @@ u32 interrupts_getPrivateTimerTicksPerSecond();
 void interrupts_enableTimerGlobalInts();
 void interrupts_disableTimerGlobalInts();
 
-void isr_function();
-
 extern volatile int interrupts_isrFlagGlobal;
 
 #ifdef __cplusplus
