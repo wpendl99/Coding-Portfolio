@@ -57,6 +57,12 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uses interval timer 0 to measure time spent in ISR.
 #define ENABLE_INTERVAL_TIMER_0_IN_TIMER_ISR 1
 
+enum arm_interrupts_e {
+  ARM_INTERRUPTS_IRQ_AXI_INTC,
+  ARM_INTERRUPTS_IRQ_ARM_TIMER,
+  ARM_INTERRUPTS_IRQ_SYSMON
+};
+
 // queue_data_t interrupts_popAdcQueueData();
 // bool interrupts_adcQueueEmpty();
 // queue_size_t interrupts_adcQueueElementCount();
@@ -72,12 +78,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // prints out diagnostic messages if something goes awry.
 int arm_interrupts_init();
 
+void arm_interrupts_register(enum arm_interrupts_e, void (*fcn)());
+
 void arm_interrupts_register_intc_isr(void (*axi_intc_isr)());
 void arm_interrupts_register_arm_timer_isr(void (*arm_timer_isr)());
 
 // Used to enable and disable ARM ints.
-int arm_interrupts_enable();
-int arm_interrupts_disable();
+void arm_interrupts_enable();
+void arm_interrupts_disable();
 
 // Useeed to enable and disable the global timer int output.
 int interrupts_enableTimerGlobalInts();
