@@ -80,23 +80,12 @@ int arm_interrupts_init();
 
 void arm_interrupts_register(enum arm_interrupts_e, void (*fcn)());
 
-void arm_interrupts_register_intc_isr(void (*axi_intc_isr)());
-void arm_interrupts_register_arm_timer_isr(void (*arm_timer_isr)());
-
 // Used to enable and disable ARM ints.
 void arm_interrupts_enable();
 void arm_interrupts_disable();
 
-// Useeed to enable and disable the global timer int output.
-int interrupts_enableTimerGlobalInts();
-int interrupts_disableTimerGlobalInts();
-
-// int interrupts_startArmPrivateTimer();
-// int interrupts_stopArmPrivateTimer();
-
-// u32 interrupts_getPrivateTimerCounterValue(void);
-// void interrupts_setPrivateTimerLoadValue(u32 loadValue);
-// void interrupts_setPrivateTimerPrescalerValue(u32 prescalerValue);
+void arm_interrupts_enable_irq(enum arm_interrupts_e irq);
+void arm_interrupts_disable_irq(enum arm_interrupts_e irq);
 
 // Globally enable/disable SysMon interrupts.
 int interrupts_enableSysMonGlobalInts();
@@ -109,9 +98,6 @@ int interrupts_disableSysMonEocInts();
 
 // Keep track of total number of times interrupt_timerIsr is invoked.
 u32 interrupts_isrInvocationCount();
-
-// Returns the number of private timer ticks that occur in 1 second.
-u32 interrupts_getPrivateTimerTicksPerSecond();
 
 // Used to determine the input mode for the ADC.
 bool interrupts_getAdcInputMode();

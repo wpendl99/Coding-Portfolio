@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef DISPLAY_H_
-#define DISPLAY_H_
+#ifndef DISPLAY
+#define DISPLAY
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -152,8 +152,13 @@ void display_getTouchedPoint(int16_t *x, int16_t *y, uint8_t *z);
 // Throws away all previous touch data.
 void display_clearOldTouchData();
 
+typedef struct {
+  uint16_t x;
+  uint16_t y;
+} display_point_t;
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* DISPLAY_H_ */
+#endif /* DISPLAY */
