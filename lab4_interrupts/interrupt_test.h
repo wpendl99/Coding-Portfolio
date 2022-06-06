@@ -1,5 +1,5 @@
-#ifndef LAB4
-#define LAB4
+#ifndef LAB4_INTERRUPTS_INTERRUPT_TEST
+#define LAB4_INTERRUPTS_INTERRUPT_TEST
 
 /*
 This function is a small test application of your interrupt controller.  The
@@ -18,7 +18,7 @@ isr_timer1, isr_timer2)
 
     Make sure you call `interrupts_init()` first!
 */
-void lab4_main();
+void interrupt_test_run();
 
 /*
 In this interrupt handler for timer 0, you should:
@@ -29,7 +29,7 @@ In this interrupt handler for timer 0, you should:
         (Think about which one you should do first -- the order matters!)
     3. Flip the value of LED 0.
 */
-void isr_timer0();
+// void isr_timer0();
 
 /*
 In this interrupt handler for timer 1, you should:
@@ -40,7 +40,7 @@ In this interrupt handler for timer 1, you should:
         (Think about which one you should do first -- the order matters!)
     3. Flip the value of LED 1.
 */
-void isr_timer1();
+// void isr_timer1();
 
 /*
 In this interrupt handler for timer 2, you should:
@@ -51,6 +51,6 @@ In this interrupt handler for timer 2, you should:
         (Think about which one you should do first -- the order matters!)
     3. Flip the value of LED 2.
 */
-void isr_timer2();
+// void isr_timer2();
 
-#endif /* LAB4 */
+#endif /* LAB4_INTERRUPTS_INTERRUPT_TEST */
