@@ -20,11 +20,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "display.h"
 #include "interrupts.h"
 #include "intervalTimer.h"
-#include "lab4.h"
 #include "leds.h"
+#include "touchscreen.h"
 #include "utils.h"
-#include "xil_io.h"
-#include "xparameters.h"
+// #include "xil_io.h"
+// #include "xparameters.h"
 
 #define MILESTONE_1 1
 #define MILESTONE_2 2
@@ -32,7 +32,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 ////////////////////////////////////////////////////////////////////////////////
 // Uncomment one of the following lines to run Milestone 1 or 2      ///////////
 ////////////////////////////////////////////////////////////////////////////////
-#define RUN_PROGRAM MILESTONE_1
+// #define RUN_PROGRAM MILESTONE_1
 // #define RUN_PROGRAM MILESTONE_2
 
 // If nothing is uncommented above, run milestone 2
@@ -49,17 +49,33 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Manual 4-2. Assuming that the prescaler = 0, the formula for computing the
 // load value based upon the desired period is: load-value = (period *
 // timer-clock) - 1
-#define TIMER_CLOCK_FREQUENCY (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
-#define TIMER_LOAD_VALUE ((CONFIG_TIMER_PERIOD * TIMER_CLOCK_FREQUENCY) - 1.0)
 
-#define INTERRUPTS_PER_SECOND (1.0 / CONFIG_TIMER_PERIOD)
-#define TOTAL_SECONDS 20
-#define MAX_INTERRUPT_COUNT (INTERRUPTS_PER_SECOND * TOTAL_SECONDS)
+// #define TIMER_CLOCK_FREQUENCY (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
+// #define TIMER_LOAD_VALUE ((CONFIG_TIMER_PERIOD * TIMER_CLOCK_FREQUENCY)
+// - 1.0)
+
+// #define INTERRUPTS_PER_SECOND (1.0 / CONFIG_TIMER_PERIOD)
+// #define TOTAL_SECONDS 20
+// #define MAX_INTERRUPT_COUNT (INTERRUPTS_PER_SECOND * TOTAL_SECONDS)
 
 // Keep track of how many times isr_function() is called.
 uint32_t isr_functionCallCount = 0;
 
 extern volatile int interrupt_occurred;
+
+void isr() {
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_TIMER_0);
+  interrupts_ack(1 << INTERRUPTS_IRQ_TIMER_0);
+  clockControl_tick();
+  touchscreen_tick();
+}
+
+void isr_1s() {
+  printf("1s!\n");
+  intervalTimer_ackInterrupt(INTERRUPTS_IRQ_TIMER_1);
+  interrupts_ack(1 << INTERRUPTS_IRQ_TIMER_1);
+  clockDisplay_advanceTimeOneSecond();
+}
 
 // This main uses isr_function() to invoked clockControl_tick().
 int main() {
@@ -67,64 +83,62 @@ int main() {
 
   printf(RUN_DISPLAY_TEST_MSG);
 
-  lab4_main();
-
   printf("========== Milestone done ==========\n");
 
 #elif (RUN_PROGRAM == MILESTONE_2)
   // This main() uses the flag method to invoke clockControl_tick().
 
   printf(RUN_MILESTONE_2_MSG);
-  // Initialize the GPIO LED driver and print out an error message if it fails
-  // (argument = true). You need to init the LEDs so that LD4 can function as
-  // a heartbeat.
-  leds_init(true);
-  // Init all interrupts (but does not enable the interrupts at the devices).
-  // Prints an error message if an internal failure occurs because the
-  // argument = true.
-  interrupts_initAll(true);
+  leds_init();
 
-  // interrupts_setPrivateTimerLoadValue(TIMER_LOAD_VALUE);
-  // interrupts_enableTimerGlobalInts();
-
-  // Initialization of the clock display is not time-dependent, do it outside
-  // of the state machine.
   clockDisplay_init();
   clockControl_init();
+
+  interrupts_init();
+  interrupts_register(INTERRUPTS_IRQ_TIMER_0, isr);
+  interrupts_register(INTERRUPTS_IRQ_TIMER_1, isr_1s);
+  interrupts_irq_enable((1 << INTERRUPTS_IRQ_TIMER_0) |
+                        (1 << INTERRUPTS_IRQ_TIMER_1));
+
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, CONFIG_TIMER_PERIOD);
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_1, 1.0);
+
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_0);
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_1);
+
+  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
+  intervalTimer_start(INTERVAL_TIMER_TIMER_1);
+
+  touchscreen_init(CONFIG_TIMER_PERIOD);
+
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
-  int32_t personalInterruptCount = 0;
+  // int32_t personalInterruptCount = 0;
 
   // Start the private ARM timer running.
   // interrupts_startArmPrivateTimer();
 
   // Enable interrupts at the ARM.
-  interrupts_enableArmInts();
+  // interrupts_enableArmInts();
 
-  while (1) {
-    if (interrupts_isrFlagGlobal) {
-      // Count ticks.
-      personalInterruptCount++;
-      clockControl_tick();
-      interrupts_isrFlagGlobal = 0;
-      if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
-        break;
-      utils_sleep();
-      fflush(stdout);
-    }
-  }
-  interrupts_disableArmInts();
-  printf("isr invocation count: %d\n", interrupts_isrInvocationCount());
-  printf("internal interrupt count: %d\n", personalInterruptCount);
+  // while (1) {
+  //   if (interrupts_isrFlagGlobal) {
+  //     // Count ticks.
+  //     personalInterruptCount++;
+  //     clockControl_tick();
+  //     interrupts_isrFlagGlobal = 0;
+  //     if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
+  //       break;
+  //     utils_sleep();
+  //     fflush(stdout);
+  //   }
+  // }
+
+  while (1)
+    ;
+    // interrupts_disableArmInts();
+    // printf("isr invocation count: %d\n", interrupts_isrInvocationCount());
+    // printf("internal interrupt count: %d\n", personalInterruptCount);
 #endif
   return 0;
-}
-
-// Keep this empty
-// The 'interrupts_isrFlagGlobal' flag will be automatically set on an interrupt
-// behind the scenes.  We don't need to set it here.
-
-void isr_function() {
-  // Call our interrupt handler function
-  // interrupts_isr();
 }

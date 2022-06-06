@@ -9,7 +9,7 @@ enum touchscreen_status_e {
   TOUCHSCREEN_RELEASED
 };
 
-void touchscreen_init(double period_ms);
+void touchscreen_init(double period_seconds);
 
 void touchscreen_tick();
 
