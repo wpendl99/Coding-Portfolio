@@ -71,10 +71,13 @@ void isr() {
 }
 
 void isr_1s() {
-  printf("1s!\n");
   intervalTimer_ackInterrupt(INTERRUPTS_IRQ_TIMER_1);
   interrupts_ack(1 << INTERRUPTS_IRQ_TIMER_1);
-  clockDisplay_advanceTimeOneSecond();
+
+  enum touchscreen_status_e ts_status = touchscreen_get_status();
+  if (ts_status != TOUCHSCREEN_PRESSED) {
+    clockDisplay_advanceTimeOneSecond();
+  }
 }
 
 // This main uses isr_function() to invoked clockControl_tick().
@@ -92,7 +95,8 @@ int main() {
   leds_init();
 
   clockDisplay_init();
-  clockControl_init();
+  clockControl_init(CONFIG_TIMER_PERIOD);
+  touchscreen_init(CONFIG_TIMER_PERIOD);
 
   interrupts_init();
   interrupts_register(INTERRUPTS_IRQ_TIMER_0, isr);
@@ -108,8 +112,6 @@ int main() {
 
   intervalTimer_start(INTERVAL_TIMER_TIMER_0);
   intervalTimer_start(INTERVAL_TIMER_TIMER_1);
-
-  touchscreen_init(CONFIG_TIMER_PERIOD);
 
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
