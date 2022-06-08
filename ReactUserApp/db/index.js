@@ -11,6 +11,8 @@ const pool = mariadb.createPool({
 	acquireTimeout: 2000,
 });
 
+let testdb = {};
+
 // Query All Users from db
 testdb.all = () => {
 	return new Promise(async (resolve, reject) => {
