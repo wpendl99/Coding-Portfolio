@@ -1,3 +1,5 @@
+View this problem on [LeetCode](https://leetcode.com/problems/snapshot-array/)
+
 Implement a SnapshotArray that supports the following interface:
 
 - `SnapshotArray(int length)` initializes an array-like data structure with the given length. **Initially, each element equals 0.**

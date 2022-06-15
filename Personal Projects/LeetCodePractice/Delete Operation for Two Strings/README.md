@@ -1,3 +1,5 @@
+View this problem on [LeetCode](https://leetcode.com/problems/delete-operation-for-two-strings/)
+
 Given two strings `word1` and `word2`, return the minimum number of steps required to make `word1` and `word2` the same.
 
 In one **step**, you can delete exactly one character in either string.
