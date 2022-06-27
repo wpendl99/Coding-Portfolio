@@ -12,12 +12,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "drivers/buttons.h"
 #include "drivers/switches.h"
 
-#include "lab2.h"
+#include "gpioTest.h"
 
 // Run switches and buttons runTest functions
 int main() {
-  switches_runTest();
-  buttons_runTest();
-
+  gpioTest_buttons();
+  gpioTest_switches();
   return 0;
 }
