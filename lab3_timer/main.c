@@ -44,77 +44,127 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // #define TCR1_OFFSET 0x18 // register offset for TCR1
 
 // Reads the timer1 registers based upon the offset.
-uint32_t readTimer0Register(uint32_t registerOffset) {
+uint32_t readTimer0Reg(uint32_t registerOffset) {
   uint32_t address = XPAR_AXI_TIMER_0_BASEADDR +
                      registerOffset; // Add the offset to the base address.
   return Xil_In32(address);          // Read the register at that address.
 }
 
-#define SHORT_DELAY 10
+#define MS_PER_S 1000
+
+#define M1_SHORT_DELAY_MS 10
+#define M1_REPEAT 5
+#define M1_MED_DELAY_SECONDS 5
+#define M1_ROLLOVER_DELAY_S 55
+
+#define M1_DOWN_PERIOD_S 5
 #define DELAY_500MS 500
 #define DELAY_1S 1000
+
+// Test UP Counter for Timer 0
+void testUpCounter() {
+  printf("Calling `initCountUp` to initialize the timer.\n");
+  intervalTimer_initCountUp(INTERVAL_TIMER_TIMER_0);
+  printf("timer_0 TCR0 should be 0: %u\n", readTimer0Reg(TCR0_OFFSET));
+
+  // Start timer 0.
+  printf("Calling `start` to start the timer.\n");
+  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
+
+  // Show that the timer is running.
+  printf("Reading TCR0 with %d ms delays.\n", M1_SHORT_DELAY_MS);
+
+  // Just checking multiple times to see if the timer is running.
+  for (int32_t i = 0; i < M1_REPEAT; i++) {
+    utils_msDelay(M1_SHORT_DELAY_MS);
+    printf("timer_0 TCR0 (which should be increasing):%u\n",
+           readTimer0Reg(TCR0_OFFSET));
+  }
+
+  printf("Calling `reload` to set the timer back to 0.\n");
+  intervalTimer_reload(INTERVAL_TIMER_TIMER_0);
+
+  // Show that the timer is running.
+  printf("Reading TCR0 with %d ms delays.\n", M1_SHORT_DELAY_MS);
+
+  // Just checking multiple times to see if the timer is running.
+  for (int32_t i = 0; i < M1_REPEAT; i++) {
+    utils_msDelay(M1_SHORT_DELAY_MS);
+    printf("timer_0 TCR0 (which should be increasing):%u\n",
+           readTimer0Reg(TCR0_OFFSET));
+  }
+
+  printf("Testing conversion to seconds; wait until it has been about %d "
+         "seconds since timer was started.\n",
+         M1_MED_DELAY_SECONDS);
+  utils_msDelay((M1_MED_DELAY_SECONDS * MS_PER_S) -
+                (M1_SHORT_DELAY_MS - M1_REPEAT));
+  printf("Value returned by `getTotalDurationInSeconds`: %f\n",
+         intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
+}
+
+// Test rollover for up counter
+void testUpRollover() {
+  printf("Testing rollover; wait another ~45 seconds.\n");
+  utils_msDelay(M1_ROLLOVER_DELAY_S * MS_PER_S);
+
+  printf("Rollover bit (T0INT) value: %d\n",
+         (readTimer0Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
+
+  printf("Value returned by `getTotalDurationInSeconds` (should be about %d): "
+         "%f\n",
+         M1_MED_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
+         intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
+}
+
+void testDownCounter() {
+  printf("Calling `initCountDown` to initialize the timer.\n");
+
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, M1_DOWN_PERIOD_S);
+  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
+
+  utils_msDelay(DELAY_500MS);
+  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
+         readTimer0Reg(TCR0_OFFSET));
+  utils_msDelay(DELAY_1S);
+  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
+         readTimer0Reg(TCR0_OFFSET));
+  utils_msDelay(DELAY_1S);
+  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
+         readTimer0Reg(TCR0_OFFSET));
+  utils_msDelay(DELAY_1S);
+  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
+         readTimer0Reg(TCR0_OFFSET));
+  utils_msDelay(DELAY_1S);
+  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
+         readTimer0Reg(TCR0_OFFSET));
+  utils_msDelay(DELAY_1S);
+  printf("timer_0 TCR0 should have rolled over at this point:%u\n",
+         readTimer0Reg(TCR0_OFFSET));
+}
 
 // Milestone 1 test
 void milestone1() {
   printf("=============== Starting milestone 1 ===============\n");
 
+  // Test UP Counter for Timer 0
+  printf("******************************************\n");
   printf("***** Testing UP Counter for Timer 0 *****\n");
+  printf("******************************************\n");
+  testUpCounter();
 
-  // Init timer 0.
-  intervalTimer_initCountUp(INTERVAL_TIMER_TIMER_0);
+  // Test rollover - you may want to comment this out once you have it working
+  // as it takes a while.
+  printf("******************************************\n");
+  printf("***** Testing UP Counter Rollover ********\n");
+  printf("******************************************\n");
+  testUpRollover();
 
-  printf("timer_0 TCR0 should be 0 at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
+  printf("******************************************\n");
+  printf("***** Testing DOWN Counter for Timer 0 ***\n");
+  printf("******************************************\n");
+  testDownCounter();
 
-  // Start timer 0.
-  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
-
-  // Show that the timer is running.
-  printf(
-      "The following register values should be changing while reading them.\n");
-
-  // Just checking multiple times to see if the timer is running.
-  utils_msDelay(SHORT_DELAY);
-  printf("timer_0 TCR0 should be increasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(SHORT_DELAY);
-  printf("timer_0 TCR0 should be increasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(SHORT_DELAY);
-  printf("timer_0 TCR0 should be increasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(SHORT_DELAY);
-  printf("timer_0 TCR0 should be increasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(SHORT_DELAY);
-  printf("timer_0 TCR0 should be increasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-
-  printf("***** Testing 5 second DOWN Counter for Timer 0 *****\n");
-  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, 5.0);
-  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
-
-  utils_msDelay(DELAY_500MS);
-  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(DELAY_1S);
-  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(DELAY_1S);
-  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(DELAY_1S);
-  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(DELAY_1S);
-  printf("timer_0 TCR0 should be decreasing at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-  utils_msDelay(DELAY_1S);
-  printf("timer_0 TCR0 should have rolled over at this point:%u\n",
-         readTimer0Register(TCR0_OFFSET));
-
-  printf("Rollover bit (T0INT) value: %d\n",
-         (readTimer0Register(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
   printf("=============== Done milestone 1 ===============\n");
 }
 

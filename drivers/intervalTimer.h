@@ -48,10 +48,10 @@ void intervalTimer_start(uint32_t timerNumber);
 // timerNumber indicates which timer should stop running.
 void intervalTimer_stop(uint32_t timerNumber);
 
-// This function is called whenever you want to reuse an interval timer.
-// For example, say the interval timer has been used in the past, the user
-// will call intervalTimer_reset() prior to calling intervalTimer_start().
-// timerNumber indicates which timer should reset.
+// This function is called whenever you want to reload the timer value
+// from the load registers.  For a count-up timer, this will reset the
+// timer to zero.  For a count-down timer, this will reset the timer to
+// its initial count-down value.
 void intervalTimer_reload(uint32_t timerNumber);
 
 // Use this function to ascertain how long a given timer has been running.
