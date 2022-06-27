@@ -12,8 +12,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Provides an API for accessing the three hardware timers that are installed
 // in the ZYNQ fabric.
 
-#ifndef DRIVERS_INTERVALTIMER
-#define DRIVERS_INTERVALTIMER
+#ifndef INTERVALTIMER
+#define INTERVALTIMER
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -29,12 +29,21 @@ typedef uint32_t
 #define INTERVAL_TIMER_TIMER_1 1
 #define INTERVAL_TIMER_TIMER_2 2
 
-// You must initialize the timers before you use them the first time.
-// It is generally only called once but should not cause an error if it
-// is called multiple times.
-// timerNumber indicates which timer should be initialized.
-// returns INTERVAL_TIMER_STATUS_OK if successful, some other value otherwise.
+// You must configure the interval timer before you use it:
+// 1. Set the Timer Control/Status Registers such that:
+//  - The timer is in 64-bit cascade mode
+//  - The timer counts up
+// 2. Initialize both LOAD registers with zeros
+// 3. Call the _reload function to move the LOAD values into the Counters
 intervalTimer_status_t intervalTimer_initCountUp(uint32_t timerNumber);
+
+// You must configure the interval timer before you use it:
+// 1. Set the Timer Control/Status Registers such that:
+//  - The timer is in 64-bit cascade mode
+//  - The timer counts down
+//  - The timer automatically reloads when reaching zero
+// 2. Initialize LOAD registers with appropraite values, given the `period`.
+// 3. Call the _reload function to move the LOAD values into the Counters
 intervalTimer_status_t intervalTimer_initCountDown(uint32_t timerNumber,
                                                    double period);
 
@@ -48,10 +57,12 @@ void intervalTimer_start(uint32_t timerNumber);
 // timerNumber indicates which timer should stop running.
 void intervalTimer_stop(uint32_t timerNumber);
 
-// This function is called whenever you want to reload the timer value
+// This function is called whenever you want to reload the Counter values
 // from the load registers.  For a count-up timer, this will reset the
 // timer to zero.  For a count-down timer, this will reset the timer to
-// its initial count-down value.
+// its initial count-down value.  The load registers should have already
+// been set in the appropriate `init` function, so there is no need to set
+// them here.
 void intervalTimer_reload(uint32_t timerNumber);
 
 // Use this function to ascertain how long a given timer has been running.
@@ -60,16 +71,13 @@ void intervalTimer_reload(uint32_t timerNumber);
 // has been called. The timerNumber argument determines which timer is read.
 double intervalTimer_getTotalDurationInSeconds(uint32_t timerNumber);
 
+// Enable the interrupt output of the given timer.
 void intervalTimer_enableInterrupt(uint8_t timerNumber);
 
+// Disable the interrupt output of the given timer.
 void intervalTimer_disableInterrupt(uint8_t timerNumber);
 
-void intervalTimer_setCountUp(uint8_t timerNumber);
-
-void intervalTimer_setCountDown(uint8_t timerNumber);
-
-bool intervalTimer_rolledOver(uint8_t timerNumber);
-
+// Acknowledge the rollover to clear the interrupt output.
 void intervalTimer_ackInterrupt(uint8_t timerNumber);
 
-#endif /* DRIVERS_INTERVALTIMER */
+#endif /* INTERVALTIMER */

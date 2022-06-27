@@ -12,12 +12,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include <stdio.h>
 
+#include "intervalTimer.h"
+#include "utils.h"
 #include "xil_io.h"
 #include "xparameters.h"
-
-#include "drivers/buttons.h"
-#include "drivers/intervalTimer.h"
-#include "utils.h"
 
 #define MILESTONE_1 1
 #define MILESTONE_2 2
@@ -26,7 +24,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uncomment one of the following lines to run Milestone 1 or 2      ///////////
 ////////////////////////////////////////////////////////////////////////////////
 // #define RUN_PROGRAM MILESTONE_1
-#define RUN_PROGRAM MILESTONE_2
+// #define RUN_PROGRAM MILESTONE_2
 
 #ifndef RUN_PROGRAM
 #define RUN_PROGRAM MILESTONE_2
@@ -40,10 +38,21 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define TCR1_OFFSET 0x18 // register offset for TCR1
 
 #define TCSR_INT_BIT 0x0100
+#define TCSR_ENIT_BIT 0x0040
 
 // Reads the timer1 registers based upon the offset.
 uint32_t readTimer0Reg(uint32_t registerOffset) {
   uint32_t address = XPAR_AXI_TIMER_0_BASEADDR +
+                     registerOffset; // Add the offset to the base address.
+  return Xil_In32(address);          // Read the register at that address.
+}
+uint32_t readTimer1Reg(uint32_t registerOffset) {
+  uint32_t address = XPAR_AXI_TIMER_1_BASEADDR +
+                     registerOffset; // Add the offset to the base address.
+  return Xil_In32(address);          // Read the register at that address.
+}
+uint32_t readTimer2Reg(uint32_t registerOffset) {
+  uint32_t address = XPAR_AXI_TIMER_2_BASEADDR +
                      registerOffset; // Add the offset to the base address.
   return Xil_In32(address);          // Read the register at that address.
 }
@@ -56,6 +65,7 @@ uint32_t readTimer0Reg(uint32_t registerOffset) {
 #define M1_ROLLOVER_DELAY_S 40
 
 #define M1_DOWN_PERIOD_S 5
+#define M2_DOWN_PERIOD_S 5
 #define DELAY_500MS 500
 #define DELAY_1S 1000
 
@@ -98,7 +108,7 @@ void testUpCounter() {
            readTimer0Reg(TCR0_OFFSET));
   }
 
-  printf("Testing conversion to seconds; wait until it has been about %d "
+  printf("Testing conversion to seconds; wait until it has been ~%d "
          "seconds since timer was started.\n",
          M1_MED_DELAY_SECONDS);
   utils_msDelay((M1_MED_DELAY_SECONDS * MS_PER_S) -
@@ -130,7 +140,7 @@ void testUpRollover() {
   printf("timer_0 TCR1 should be 1 at this point: %10u\n",
          readTimer0Reg(TCR1_OFFSET));
 
-  printf("Value returned by `getTotalDurationInSeconds` (should be about %d): "
+  printf("Value returned by `getTotalDurationInSeconds` (should be ~%d): "
          "%f\n",
          M1_MED_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
@@ -256,26 +266,112 @@ void testUpCounterAll() {
 
   utils_msDelay(M1_ROLLOVER_DELAY_S * MS_PER_S);
 
-  printf("`getTotalDurationInSeconds` (should be about %d): "
+  printf("`getTotalDurationInSeconds` (should be ~%d): "
          "%f\n",
-         M1_MED_DELAY_SECONDS + M2_SECOND_DELAY_SECONDS,
+         M2_SECOND_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
-  printf("`getTotalDurationInSeconds` (should be about %d): "
+  printf("`getTotalDurationInSeconds` (should be ~%d): "
          "%f\n",
-         M1_MED_DELAY_SECONDS + M2_SECOND_DELAY_SECONDS,
+         M1_MED_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_1));
-  printf("`getTotalDurationInSeconds` (should be about %d): "
+  printf("`getTotalDurationInSeconds` (should be ~%d): "
          "%f\n",
-         M1_MED_DELAY_SECONDS + M2_SECOND_DELAY_SECONDS,
+         M1_MED_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_2));
+}
+
+void testDownCounterAll() {
+  printf("Calling `initCountDown` to initialize all the timers with a %ds "
+         "period.\n",
+         M2_DOWN_PERIOD_S);
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, M2_DOWN_PERIOD_S);
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_1, M2_DOWN_PERIOD_S);
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_2, M2_DOWN_PERIOD_S);
+
+  printf("Verifying interrupt enable (ENIT) bit is 0 after init on all "
+         "timers:\n");
+  printf("Timer 0 TCSR0 ENIT (should be 0): %d\n",
+         (readTimer0Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+  printf("Timer 1 TCSR0 ENIT (should be 0): %d\n",
+         (readTimer1Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+  printf("Timer 2 TCSR0 ENIT (should be 0): %d\n",
+         (readTimer2Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+
+  printf("Calling `enableInterrupt` on all timers.\n");
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_0);
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_1);
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_2);
+
+  printf("Verifying ENIT bit is set on all timers:\n");
+  printf("Timer 0 TCSR0 ENIT (should be 1): %d\n",
+         (readTimer0Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+  printf("Timer 1 TCSR0 ENIT (should be 1): %d\n",
+         (readTimer1Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+  printf("Timer 2 TCSR0 ENIT (should be 1): %d\n",
+         (readTimer2Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+
+  printf("Calling `disableInterrupt` on all timers:\n");
+  intervalTimer_disableInterrupt(INTERVAL_TIMER_TIMER_0);
+  intervalTimer_disableInterrupt(INTERVAL_TIMER_TIMER_1);
+  intervalTimer_disableInterrupt(INTERVAL_TIMER_TIMER_2);
+
+  printf("Verifying interrupt enable (ENIT) bit has been cleared on all "
+         "timers:\n");
+  printf("Timer 0 TCSR0 ENIT (should be 0): %d\n",
+         (readTimer0Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+  printf("Timer 1 TCSR0 ENIT (should be 0): %d\n",
+         (readTimer1Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+  printf("Timer 2 TCSR0 ENIT (should be 0): %d\n",
+         (readTimer2Reg(TCSR0_OFFSET) & TCSR_ENIT_BIT) == TCSR_ENIT_BIT);
+
+  printf("Calling `start` to start all the timers.\n");
+  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
+  intervalTimer_start(INTERVAL_TIMER_TIMER_1);
+  intervalTimer_start(INTERVAL_TIMER_TIMER_2);
+
+  printf("Waiting for %d seconds.\n", M2_DOWN_PERIOD_S + 1);
+  utils_msDelay((M2_DOWN_PERIOD_S + 1) * MS_PER_S);
+
+  printf("Verifying that timers restarted:\n");
+  printf("`getTotalDurationInSeconds` (should be ~%d): "
+         "%f\n",
+         M2_DOWN_PERIOD_S - 1,
+         intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
+  printf("`getTotalDurationInSeconds` (should be ~%d): "
+         "%f\n",
+         M2_DOWN_PERIOD_S - 1,
+         intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_1));
+  printf("`getTotalDurationInSeconds` (should be ~%d): "
+         "%f\n",
+         M2_DOWN_PERIOD_S - 1,
+         intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_2));
+
+  printf("Verifying that rollover occurred:\n");
+  printf("Timer 0 TCSR0 INT_BIT (should be 1): %d\n",
+         (readTimer0Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
+  printf("Timer 1 TCSR0 INT_BIT (should be 1): %d\n",
+         (readTimer1Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
+  printf("Timer 2 TCSR0 INT_BIT (should be 1): %d\n",
+         (readTimer2Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
+
+  printf("Calling `ackInterrupt` on all timers.\n");
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_TIMER_0);
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_TIMER_1);
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_TIMER_2);
+
+  printf(
+      "Verifying that rollover/interrupt output was successfully cleared:\n");
+  printf("Timer 0 TCSR0 INT_BIT (should be 0): %d\n",
+         (readTimer0Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
+  printf("Timer 1 TCSR0 INT_BIT (should be 0): %d\n",
+         (readTimer1Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
+  printf("Timer 2 TCSR0 INT_BIT (should be 0): %d\n",
+         (readTimer2Reg(TCSR0_OFFSET) & TCSR_INT_BIT) == TCSR_INT_BIT);
 }
 
 // Mileston 2 test function
 void milestone2() {
   printf("=============== Starting milestone 2 ===============\n");
-  double duration0, duration1,
-      duration2;  // Will hold the duration values for the various timers.
-  buttons_init(); // init the buttons package.
 
   printf("******************************************\n");
   printf("***** Testing UP Counter for All Timers **\n");
@@ -283,38 +379,11 @@ void milestone2() {
   testUpCounterAll();
 
   printf("******************************************\n");
-  printf("***** Testing Down Counter for All Timers \n");
+  printf("***** Testing Down Counter & Interrupts for All Timers \n");
   printf("******************************************\n");
   testDownCounterAll();
 
-  printf("******************************************\n");
-  printf("***** Testing Interrupts for All Timers **\n");
-  printf("******************************************\n");
-  testInterruptAll();
-
-  //   for (int8_t i = 0; i < TEST_ITERATION_COUNT; i++) {
-  //     // Start all the timers.
-  //     intervalTimer_start(INTERVAL_TIMER_TIMER_0);
-  //     intervalTimer_start(INTERVAL_TIMER_TIMER_1);
-  //     intervalTimer_start(INTERVAL_TIMER_TIMER_2);
-  //     // Delay is based on the loop count.
-  //     utils_msDelay((i + 1) * ONE_SECOND_DELAY);
-  //     // Stop all of the timers.
-  //     intervalTimer_stop(INTERVAL_TIMER_TIMER_0);
-  //     intervalTimer_stop(INTERVAL_TIMER_TIMER_1);
-  //     intervalTimer_stop(INTERVAL_TIMER_TIMER_2);
-  //     // Print the duration of all of the timers. The delays should be
-  //     // approximately 1, 3, 6, and 10 seconds.
-  //     printf("Delays should approximately be: 1, 3, 6, 10 seconds.\n");
-  //     printf("timer:(%d) duration:%f\n", INTERVAL_TIMER_TIMER_0,
-  //            intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
-  //     printf("timer:(%d) duration:%f\n", INTERVAL_TIMER_TIMER_1,
-  //            intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_1));
-  //     printf("timer:(%d) duration:%f\n", INTERVAL_TIMER_TIMER_2,
-  //            intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_2));
-  //   }
-
-  printf("intervalTimer Test Complete.\n");
+  printf("=============== Done milestone 2 ===============\n");
 }
 
 // main executes both milestones.
