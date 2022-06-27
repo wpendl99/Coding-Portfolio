@@ -9,7 +9,7 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-// Print out "hello world" on both the console and the LCD screen.
+#include <stdio.h>
 
 #include "display.h"
 
@@ -17,16 +17,22 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define CURSOR_X 0
 #define CURSOR_Y 0
 
-#include <stdio.h>
+// Print out "hello world" on both the console and the LCD screen.
 int main() {
-  display_init(); // Must init all of the software and underlying hardware for
-                  // LCD.
-  display_fillScreen(DISPLAY_BLACK);     // Blank the screen.
-  display_setCursor(CURSOR_X, CURSOR_Y); // The upper left of the LCD screen.
-  display_setTextColor(DISPLAY_RED);     // Make the text red.
-  display_setTextSize(TEXT_SIZE);        // Make the text a little larger.
-  display_println("hello world (on the LCD)!"); // This actually prints the
-                                                // string to the LCD.
-  printf("hello world!\n");                     // This prints on the console.
+
+  // Initialize display driver, and fill scren with black
+  display_init();
+  display_fillScreen(DISPLAY_BLACK); // Blank the screen.
+
+  // Configure display text settings
+  display_setTextColor(DISPLAY_RED); // Make the text red.
+  display_setTextSize(TEXT_SIZE);    // Make the text a little larger.
+
+  // Set the cursor location and print to the LCD
+  display_setCursor(CURSOR_X, CURSOR_Y);
+  display_println("hello world (on the LCD)!");
+
+  // Also print out 'hello world' on the terminal (stdout).
+  printf("hello world!\n");
   return 0;
 }

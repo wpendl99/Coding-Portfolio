@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef SWITCHES_H
-#define SWITCHES_H
+#ifndef SWITCHES
+#define SWITCHES
 
 #include <stdint.h>
 
@@ -29,10 +29,4 @@ int32_t switches_init();
 // returned value. bit3 = SW3, bit2 = SW2, bit1 = SW1, bit0 = SW0.
 int32_t switches_read();
 
-// Runs a test of the switches. As you slide the switches, LEDs directly above
-// the switches will illuminate. The test will run until all switches are slid
-// upwards. When all 4 slide switches are slid upward, this function will
-// return.
-void switches_runTest();
-
-#endif /* SWITCHES_H */
+#endif /* SWITCHES */

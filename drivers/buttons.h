@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef BUTTONS_H
-#define BUTTONS_H
+#ifndef BUTTONS
+#define BUTTONS
 
 #include <stdint.h>
 
@@ -27,4 +27,4 @@ void buttons_init();
 // returned value. bit3 = BTN3, bit2 = BTN2, bit1 = BTN1, bit0 = BTN0.
 uint8_t buttons_read();
 
-#endif /* BUTTONS_H */
+#endif /* BUTTONS */
