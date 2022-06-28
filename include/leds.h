@@ -9,8 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef LEDS_H_
-#define LEDS_H_
+#ifndef LEDS
+#define LEDS
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -35,4 +35,4 @@ void leds_writeLd4(int ledValue);
 // the code.
 int leds_runTest();
 
-#endif /* LEDS_H_ */
+#endif /* LEDS */

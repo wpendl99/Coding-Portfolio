@@ -272,11 +272,11 @@ void testUpCounterAll() {
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_0));
   printf("`getTotalDurationInSeconds` (should be ~%d): "
          "%f\n",
-         M1_MED_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
+         M2_SECOND_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_1));
   printf("`getTotalDurationInSeconds` (should be ~%d): "
          "%f\n",
-         M1_MED_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
+         M2_SECOND_DELAY_SECONDS + M1_ROLLOVER_DELAY_S,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_TIMER_2));
 }
 

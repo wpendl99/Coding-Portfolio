@@ -32,6 +32,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
   INTERRUPTS_ADC_UNIPOLAR_MODE // Change the default here.
 
 #ifdef ZYBO_BOARD
+#endif
 
 #include "xil_types.h"
 
@@ -63,6 +64,10 @@ enum arm_interrupts_e {
   ARM_INTERRUPTS_IRQ_SYSMON
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // queue_data_t interrupts_popAdcQueueData();
 // bool interrupts_adcQueueEmpty();
 // queue_size_t interrupts_adcQueueElementCount();
@@ -88,78 +93,76 @@ void arm_interrupts_enable_irq(enum arm_interrupts_e irq);
 void arm_interrupts_disable_irq(enum arm_interrupts_e irq);
 
 // Globally enable/disable SysMon interrupts.
-int interrupts_enableSysMonGlobalInts();
-int interrupts_disableSysMonGlobalInts();
+int arm_interrupts_enableSysMonGlobalInts();
+int arm_interrupts_disableSysMonGlobalInts();
 
 // Enable End-Of-Conversion interrupts. You can use this to count how often an
 // ADC conversion occurs.
-int interrupts_enableSysMonEocInts();
-int interrupts_disableSysMonEocInts();
+int arm_interrupts_enableSysMonEocInts();
+int arm_interrupts_disableSysMonEocInts();
 
 // Keep track of total number of times interrupt_timerIsr is invoked.
-u32 interrupts_isrInvocationCount();
+u32 arm_interrupts_isrInvocationCount();
 
 // Used to determine the input mode for the ADC.
-bool interrupts_getAdcInputMode();
+bool arm_interrupts_getAdcInputMode();
 
 // Use this to read the latest ADC conversion.
-uint32_t interrupts_getAdcData();
+uint32_t arm_interrupts_getAdcData();
 
 // u32 interrupts_getTotalXadcSampleCount();
-u32 interrupts_getTotalEocCount();
+u32 arm_interrupts_getTotalEocCount();
 // void isr_function();
 
 // Init/Enable/disable interrupts for the bluetooth radio (RDYN line).
-uint32_t interrupts_initBluetoothInterrupts();
-void interrupts_enableBluetoothInterrupts();
-void interrupts_disableBluetoothInterrupts();
-void interrupts_ackBluetoothInterrupts();
+uint32_t arm_interrupts_initBluetoothInterrupts();
+void arm_interrupts_enableBluetoothInterrupts();
+void arm_interrupts_disableBluetoothInterrupts();
+void arm_interrupts_ackBluetoothInterrupts();
 
 extern volatile int interrupts_isrFlagGlobal;
 
-#else /* not ZYBO_BOARD */
+// #else /* not ZYBO_BOARD */
 
-#define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
+// #define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
-int interrupts_initAll(__attribute__((unused)) bool printFailedStatusFlag);
+// int interrupts_initAll(__attribute__((unused)) bool printFailedStatusFlag);
 
-// User can set the load value on the private timer.
-// Also updates ticks per heart beat so that the LD4 heart-beat toggle rate
-// remains constant.
-void interrupts_setPrivateTimerLoadValue(u32 loadValue);
+// // User can set the load value on the private timer.
+// // Also updates ticks per heart beat so that the LD4 heart-beat toggle rate
+// // remains constant.
+// void interrupts_setPrivateTimerLoadValue(u32 loadValue);
 
-u32 interrupts_getPrivateTimerTicksPerSecond();
+// u32 interrupts_getPrivateTimerTicksPerSecond();
 
-// Enable/disable ARM ints.
-int interrupts_enableArmInts();
-int interrupts_disableArmInts();
+// // Enable/disable ARM ints.
+// int interrupts_enableArmInts();
+// int interrupts_disableArmInts();
 
-// Starts/stops the interrupt timer.
-int interrupts_startArmPrivateTimer();
-int interrupts_stopArmPrivateTimer();
+// // Starts/stops the interrupt timer.
+// int interrupts_startArmPrivateTimer();
+// int interrupts_stopArmPrivateTimer();
 
-// Keep track of total number of times interrupt_timerIsr is invoked.
-u32 interrupts_isrInvocationCount();
+// // Keep track of total number of times interrupt_timerIsr is invoked.
+// u32 interrupts_isrInvocationCount();
 
-// Returns the number of private timer ticks that occur in 1 second.
-u32 interrupts_getPrivateTimerTicksPerSecond();
+// // Returns the number of private timer ticks that occur in 1 second.
+// u32 interrupts_getPrivateTimerTicksPerSecond();
 
-// These two functions are provided mainly to remain compatible
-// with code given to students.
-void interrupts_enableTimerGlobalInts();
-void interrupts_disableTimerGlobalInts();
+// // These two functions are provided mainly to remain compatible
+// // with code given to students.
+// void interrupts_enableTimerGlobalInts();
+// void interrupts_disableTimerGlobalInts();
 
-extern volatile int interrupts_isrFlagGlobal;
+// extern volatile int interrupts_isrFlagGlobal;
 
 #ifdef __cplusplus
 } // extern "C'
 #endif
-
-#endif /* ZYBO_BOARD */
 
 #endif /* INTERRUPTS_H_ */
 
