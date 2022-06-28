@@ -65,14 +65,14 @@ extern volatile int interrupt_occurred;
 
 void isr() {
   intervalTimer_ackInterrupt(INTERVAL_TIMER_TIMER_0);
-  interrupts_ack(1 << INTERRUPTS_IRQ_TIMER_0);
+  interrupts_ack(INTERRUPTS_TIMER_0_MASK);
   clockControl_tick();
   touchscreen_tick();
 }
 
 void isr_1s() {
-  intervalTimer_ackInterrupt(INTERRUPTS_IRQ_TIMER_1);
-  interrupts_ack(1 << INTERRUPTS_IRQ_TIMER_1);
+  intervalTimer_ackInterrupt(INTERRUPTS_TIMER_1_IRQ);
+  interrupts_ack(INTERRUPTS_TIMER_1_MASK);
 
   enum touchscreen_status_e ts_status = touchscreen_get_status();
   if (ts_status != TOUCHSCREEN_PRESSED) {
@@ -99,10 +99,10 @@ int main() {
   touchscreen_init(CONFIG_TIMER_PERIOD);
 
   interrupts_init();
-  interrupts_register(INTERRUPTS_IRQ_TIMER_0, isr);
-  interrupts_register(INTERRUPTS_IRQ_TIMER_1, isr_1s);
-  interrupts_irq_enable((1 << INTERRUPTS_IRQ_TIMER_0) |
-                        (1 << INTERRUPTS_IRQ_TIMER_1));
+  interrupts_register(INTERRUPTS_TIMER_0_IRQ, isr);
+  interrupts_register(INTERRUPTS_TIMER_1_IRQ, isr_1s);
+  interrupts_irq_enable((1 << INTERRUPTS_TIMER_0_IRQ) |
+                        (1 << INTERRUPTS_TIMER_1_IRQ));
 
   intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, CONFIG_TIMER_PERIOD);
   intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_1, 1.0);

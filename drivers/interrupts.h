@@ -9,14 +9,19 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef DRIVERS_INTERRUPTS
-#define DRIVERS_INTERRUPTS
+#ifndef INTERRUPTS
+#define INTERRUPTS
 
 #include <stdint.h>
 
-#define INTERRUPTS_IRQ_TIMER_0 0
-#define INTERRUPTS_IRQ_TIMER_1 1
-#define INTERRUPTS_IRQ_TIMER_2 2
+#define INTERRUPTS_TIMER_0_IRQ 0
+#define INTERRUPTS_TIMER_0_MASK 0x01
+
+#define INTERRUPTS_TIMER_1_IRQ 1
+#define INTERRUPTS_TIMER_1_MASK 0x02
+
+#define INTERRUPTS_TIMER_2_IRQ 2
+#define INTERRUPTS_TIMER_2_MASK 0x04
 
 // Initialize interrupt hardware
 int32_t interrupts_init();
@@ -36,4 +41,4 @@ uint32_t interrupts_pending();
 
 void interrupts_ack(uint8_t irq_mask);
 
-#endif /* DRIVERS_INTERRUPTS */
+#endif /* INTERRUPTS */
