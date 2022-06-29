@@ -88,9 +88,7 @@ int32_t armInterrupts_setupIntc(void (*isr)());
 void armInterrupts_enableIntc();
 void armInterrupts_disableIntc();
 
-uint32_t armInterrupts_isrInvocationCount();
-
-extern volatile int armInterrupts_timerFlag;
+uint32_t armInterrupts_getTimerIsrCount();
 
 // **********************************************************
 // These have not been tested since major changes

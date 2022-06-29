@@ -119,6 +119,8 @@ void tickAll() {
 }
 #endif
 
+volatile int interrupt_flag = 0;
+
 void isr_function();
 
 // All programs share the same main.
@@ -142,11 +144,11 @@ int main() {
   armInterrupts_enable();
 
   while (1) {
-    if (armInterrupts_timerFlag) {
+    if (interrupt_flag) {
       // Count ticks.
       personalInterruptCount++;
       tickAll();
-      armInterrupts_timerFlag = 0;
+      interrupt_flag = 0;
       if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
         break;
       utils_sleep();
@@ -154,12 +156,10 @@ int main() {
   }
   armInterrupts_disable();
 
-  printf("isr invocation count: %d\n", armInterrupts_isrInvocationCount());
+  printf("isr invocation count: %d\n", armInterrupts_getTimerIsrCount());
   printf("internal interrupt count: %d\n", personalInterruptCount);
   return 0;
 }
 
 // Interrupt routine
-void isr_function() {
-  // Empty for flag method (flag set elsewhere)
-}
+void isr_function() { interrupt_flag = true; }
