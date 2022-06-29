@@ -13,13 +13,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdio.h>
 #include <xparameters.h>
 
+#include "armInterrupts.h"
+#include "armTimer.h"
 #include "bhTester.h"
 #include "buttonHandler.h"
 #include "config.h"
 #include "display.h"
 #include "flashSequence.h"
 #include "fsTester.h"
-#include "interrupts.h"
 #include "intervalTimer.h"
 #include "leds.h"
 #include "simonControl.h"
@@ -125,16 +126,21 @@ int main() {
   // Init all interrupts (but does not enable the interrupts at the devices).
   // Prints an error message if an internal failure occurs because the argument
   // = true.
-  interrupts_initAll(true);
-  interrupts_setPrivateTimerLoadValue(TIMER_LOAD_VALUE);
-  interrupts_enableTimerGlobalInts();
+  armInterrupts_init();
+  armTimer_setPeriod(CONFIG_TIMER_PERIOD);
+  armInterrupts_enableIrq(ARM_INTERRUPTS_IRQ_ARM_TIMER);
+
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
   int32_t personalInterruptCount = 0;
+
   // Start the private ARM timer running.
-  interrupts_startArmPrivateTimer();
+  // interrupts_startArmPrivateTimer();
+  armTimer_start();
+
   // Enable interrupts at the ARM.
-  interrupts_enableArmInts();
+  armInterrupts_enable();
+
   while (1) {
     if (interrupts_isrFlagGlobal) {
       // Count ticks.
@@ -146,8 +152,9 @@ int main() {
       utils_sleep();
     }
   }
-  interrupts_disableArmInts();
-  printf("isr invocation count: %d\n", interrupts_isrInvocationCount());
+  armInterrupts_disable();
+
+  printf("isr invocation count: %d\n", armInterrupts_isrInvocationCount());
   printf("internal interrupt count: %d\n", personalInterruptCount);
   return 0;
 }

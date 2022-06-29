@@ -9,11 +9,8 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef INCLUDE_ARM_INTERRUPTS
-#define INCLUDE_ARM_INTERRUPTS
-
-#ifndef INTERRUPTS_H_
-#define INTERRUPTS_H_
+#ifndef ARMINTERRUPTS
+#define ARMINTERRUPTS
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -33,8 +30,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #ifdef ZYBO_BOARD
 #endif
-
-#include "xil_types.h"
 
 #define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
 
@@ -58,7 +53,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uses interval timer 0 to measure time spent in ISR.
 #define ENABLE_INTERVAL_TIMER_0_IN_TIMER_ISR 1
 
-enum arm_interrupts_e {
+enum armInterrupts_e {
   ARM_INTERRUPTS_IRQ_AXI_INTC,
   ARM_INTERRUPTS_IRQ_ARM_TIMER,
   ARM_INTERRUPTS_IRQ_SYSMON
@@ -69,9 +64,6 @@ extern "C" {
 #endif
 
 // queue_data_t interrupts_popAdcQueueData();
-// bool interrupts_adcQueueEmpty();
-// queue_size_t interrupts_adcQueueElementCount();
-
 // Inits all interrupts, which means:
 // 1. Sets up the interrupt routine for ARM (GIC ISR) and does all necessary
 // initialization.
@@ -81,44 +73,48 @@ extern "C" {
 // 4. Pretty much does everything but it does not enable the ARM interrupts or
 // any of the device global interrupts. if printFailedStatusFlag is true, it
 // prints out diagnostic messages if something goes awry.
-int arm_interrupts_init();
+int armInterrupts_init();
 
-void arm_interrupts_register(enum arm_interrupts_e, void (*fcn)());
+void armInterrupts_register(enum armInterrupts_e, void (*fcn)());
 
 // Used to enable and disable ARM ints.
-void arm_interrupts_enable();
-void arm_interrupts_disable();
+void armInterrupts_enable();
+void armInterrupts_disable();
 
-void arm_interrupts_enable_irq(enum arm_interrupts_e irq);
-void arm_interrupts_disable_irq(enum arm_interrupts_e irq);
+void armInterrupts_enableIrq(enum armInterrupts_e irq);
+void armInterrupts_disableIrq(enum armInterrupts_e irq);
+
+uint32_t armInterrupts_isrInvocationCount();
+
+// **********************************************************]
+// Jeff updated to here
 
 // Globally enable/disable SysMon interrupts.
-int arm_interrupts_enableSysMonGlobalInts();
-int arm_interrupts_disableSysMonGlobalInts();
+int armInterrupts_enableSysMonGlobalInts();
+int armInterrupts_disableSysMonGlobalInts();
 
 // Enable End-Of-Conversion interrupts. You can use this to count how often an
 // ADC conversion occurs.
-int arm_interrupts_enableSysMonEocInts();
-int arm_interrupts_disableSysMonEocInts();
+int armInterrupts_enableSysMonEocInts();
+int armInterrupts_disableSysMonEocInts();
 
 // Keep track of total number of times interrupt_timerIsr is invoked.
-u32 arm_interrupts_isrInvocationCount();
 
 // Used to determine the input mode for the ADC.
-bool arm_interrupts_getAdcInputMode();
+bool armInterrupts_getAdcInputMode();
 
 // Use this to read the latest ADC conversion.
-uint32_t arm_interrupts_getAdcData();
+uint32_t armInterrupts_getAdcData();
 
 // u32 interrupts_getTotalXadcSampleCount();
-u32 arm_interrupts_getTotalEocCount();
+u32 armInterrupts_getTotalEocCount();
 // void isr_function();
 
 // Init/Enable/disable interrupts for the bluetooth radio (RDYN line).
-uint32_t arm_interrupts_initBluetoothInterrupts();
-void arm_interrupts_enableBluetoothInterrupts();
-void arm_interrupts_disableBluetoothInterrupts();
-void arm_interrupts_ackBluetoothInterrupts();
+uint32_t armInterrupts_initBluetoothInterrupts();
+void armInterrupts_enableBluetoothInterrupts();
+void armInterrupts_disableBluetoothInterrupts();
+void armInterrupts_ackBluetoothInterrupts();
 
 extern volatile int interrupts_isrFlagGlobal;
 
@@ -164,6 +160,4 @@ extern volatile int interrupts_isrFlagGlobal;
 } // extern "C'
 #endif
 
-#endif /* INTERRUPTS_H_ */
-
-#endif /* INCLUDE_ARM_INTERRUPTS */
+#endif /* ARMINTERRUPTS */

@@ -13,7 +13,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include <stdio.h>
 
-#include "arm_interrupts.h"
+#include "armInterrupts.h"
 #include "clockControl.h"
 #include "clockDisplay.h"
 #include "config.h"

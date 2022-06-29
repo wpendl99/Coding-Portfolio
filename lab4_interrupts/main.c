@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "arm_interrupts.h"
+#include "armInterrupts.h"
 #include "interrupt_test.h"
 #include "interrupts.h"
 

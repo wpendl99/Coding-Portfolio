@@ -1,6 +1,6 @@
-#ifndef CONFIG_LAB6
-#define CONFIG_LAB6
+#ifndef CONFIG
+#define CONFIG
 
 #define CONFIG_TIMER_PERIOD 100.0E-3
 
-#endif /* CONFIG_LAB6 */
+#endif /* CONFIG */

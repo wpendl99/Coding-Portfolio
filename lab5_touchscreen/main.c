@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "arm_interrupts.h"
+#include "armInterrupts.h"
 #include "interrupts.h"
 #include "intervalTimer.h"
 #include "touchscreen.h"
