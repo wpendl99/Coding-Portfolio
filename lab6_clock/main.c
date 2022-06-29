@@ -124,11 +124,11 @@ int main() {
   // interrupts_enableArmInts();
 
   // while (1) {
-  //   if (interrupts_isrFlagGlobal) {
+  //   if (armInterrupts_timerFlag) {
   //     // Count ticks.
   //     personalInterruptCount++;
   //     clockControl_tick();
-  //     interrupts_isrFlagGlobal = 0;
+  //     armInterrupts_timerFlag = 0;
   //     if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
   //       break;
   //     utils_sleep();

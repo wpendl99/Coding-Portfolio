@@ -129,7 +129,7 @@ int main() {
   // Prints an error message if an internal failure occurs because the argument
   // = true.
   armInterrupts_init();
-  armInterrupts_timerInit(isr_function, CONFIG_TIMER_PERIOD);
+  armInterrupts_setupTimer(isr_function, CONFIG_TIMER_PERIOD);
 
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
@@ -142,11 +142,11 @@ int main() {
   armInterrupts_enable();
 
   while (1) {
-    if (interrupts_isrFlagGlobal) {
+    if (armInterrupts_timerFlag) {
       // Count ticks.
       personalInterruptCount++;
       tickAll();
-      interrupts_isrFlagGlobal = 0;
+      armInterrupts_timerFlag = 0;
       if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
         break;
       utils_sleep();

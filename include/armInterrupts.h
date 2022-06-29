@@ -75,21 +75,26 @@ extern "C" {
 // prints out diagnostic messages if something goes awry.
 int armInterrupts_init();
 
-void armInterrupts_register(enum armInterrupts_e, void (*fcn)());
-
-// Used to enable and disable ARM ints.
+// Global interrupt enable/disable
 void armInterrupts_enable();
 void armInterrupts_disable();
 
-void armInterrupts_enableIrq(enum armInterrupts_e irq);
-void armInterrupts_disableIrq(enum armInterrupts_e irq);
+// Register different interrupt handlers
+int32_t armInterrupts_setupTimer(void (*isr)(), double period_seconds);
+void armInterrupts_enableTimer();
+void armInterrupts_disableTimer();
+
+int32_t armInterrupts_setupIntc(void (*isr)());
+void armInterrupts_enableIntc();
+void armInterrupts_disableIntc();
 
 uint32_t armInterrupts_isrInvocationCount();
 
-int32_t armInterrupts_timerInit(void (*isr)(), double period_seconds);
+extern volatile int armInterrupts_timerFlag;
 
-// **********************************************************]
-// Jeff updated to here
+// **********************************************************
+// These have not been tested since major changes
+// **********************************************************
 
 // Globally enable/disable SysMon interrupts.
 int armInterrupts_enableSysMonGlobalInts();
@@ -100,8 +105,6 @@ int armInterrupts_disableSysMonGlobalInts();
 int armInterrupts_enableSysMonEocInts();
 int armInterrupts_disableSysMonEocInts();
 
-// Keep track of total number of times interrupt_timerIsr is invoked.
-
 // Used to determine the input mode for the ADC.
 bool armInterrupts_getAdcInputMode();
 
@@ -110,53 +113,12 @@ uint32_t armInterrupts_getAdcData();
 
 // u32 interrupts_getTotalXadcSampleCount();
 u32 armInterrupts_getTotalEocCount();
-// void isr_function();
 
 // Init/Enable/disable interrupts for the bluetooth radio (RDYN line).
 uint32_t armInterrupts_initBluetoothInterrupts();
 void armInterrupts_enableBluetoothInterrupts();
 void armInterrupts_disableBluetoothInterrupts();
 void armInterrupts_ackBluetoothInterrupts();
-
-extern volatile int interrupts_isrFlagGlobal;
-
-// #else /* not ZYBO_BOARD */
-
-// #define INTERRUPT_CUMULATIVE_ISR_INTERVAL_TIMER_NUMBER 0
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
-
-// int interrupts_initAll(__attribute__((unused)) bool printFailedStatusFlag);
-
-// // User can set the load value on the private timer.
-// // Also updates ticks per heart beat so that the LD4 heart-beat toggle rate
-// // remains constant.
-// void interrupts_setPrivateTimerLoadValue(u32 loadValue);
-
-// u32 interrupts_getPrivateTimerTicksPerSecond();
-
-// // Enable/disable ARM ints.
-// int interrupts_enableArmInts();
-// int interrupts_disableArmInts();
-
-// // Starts/stops the interrupt timer.
-// int interrupts_startArmPrivateTimer();
-// int interrupts_stopArmPrivateTimer();
-
-// // Keep track of total number of times interrupt_timerIsr is invoked.
-// u32 interrupts_isrInvocationCount();
-
-// // Returns the number of private timer ticks that occur in 1 second.
-// u32 interrupts_getPrivateTimerTicksPerSecond();
-
-// // These two functions are provided mainly to remain compatible
-// // with code given to students.
-// void interrupts_enableTimerGlobalInts();
-// void interrupts_disableTimerGlobalInts();
-
-// extern volatile int interrupts_isrFlagGlobal;
 
 #ifdef __cplusplus
 } // extern "C'
