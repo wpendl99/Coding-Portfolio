@@ -86,6 +86,8 @@ void armInterrupts_disableIrq(enum armInterrupts_e irq);
 
 uint32_t armInterrupts_isrInvocationCount();
 
+int32_t armInterrupts_timerInit(void (*isr)(), double period_seconds);
+
 // **********************************************************]
 // Jeff updated to here
 

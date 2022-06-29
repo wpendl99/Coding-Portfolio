@@ -119,6 +119,8 @@ void tickAll() {
 }
 #endif
 
+void isr_function();
+
 // All programs share the same main.
 // Differences are limited to test_init() and isr_function().
 int main() {
@@ -127,8 +129,7 @@ int main() {
   // Prints an error message if an internal failure occurs because the argument
   // = true.
   armInterrupts_init();
-  armTimer_setPeriod(CONFIG_TIMER_PERIOD);
-  armInterrupts_enableIrq(ARM_INTERRUPTS_IRQ_ARM_TIMER);
+  armInterrupts_timerInit(isr_function, CONFIG_TIMER_PERIOD);
 
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
@@ -136,7 +137,6 @@ int main() {
 
   // Start the private ARM timer running.
   // interrupts_startArmPrivateTimer();
-  armTimer_start();
 
   // Enable interrupts at the ARM.
   armInterrupts_enable();
