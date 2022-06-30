@@ -22,7 +22,7 @@ void isr() {
   touchscreen_tick();
 
   // Get the current status of the touchscreen
-  enum touchscreen_status_e status = touchscreen_get_status();
+  touchscreen_status_t status = touchscreen_get_status();
 
   if (!press_detected && (status != TOUCHSCREEN_IDLE)) {
     // New button press detected, draw filled circle

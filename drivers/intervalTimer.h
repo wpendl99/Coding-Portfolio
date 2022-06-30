@@ -18,13 +18,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdbool.h>
 #include <stdint.h>
 
-// Used to indicate status that can be checked after invoking the function.
-typedef uint32_t
-    intervalTimer_status_t; // Use this type for the return type of a function.
-
-#define INTERVAL_TIMER_STATUS_OK 1   // Return this status if successful.
-#define INTERVAL_TIMER_STATUS_FAIL 0 // Return this status if failure.
-
 #define INTERVAL_TIMER_TIMER_0 0
 #define INTERVAL_TIMER_TIMER_1 1
 #define INTERVAL_TIMER_TIMER_2 2
@@ -35,26 +28,29 @@ typedef uint32_t
 //  - The timer counts up
 // 2. Initialize both LOAD registers with zeros
 // 3. Call the _reload function to move the LOAD values into the Counters
-intervalTimer_status_t intervalTimer_initCountUp(uint32_t timerNumber);
+void intervalTimer_initCountUp(uint32_t timerNumber);
 
 // You must configure the interval timer before you use it:
 // 1. Set the Timer Control/Status Registers such that:
 //  - The timer is in 64-bit cascade mode
 //  - The timer counts down
 //  - The timer automatically reloads when reaching zero
-// 2. Initialize LOAD registers with appropraite values, given the `period`.
+// 2. Initialize LOAD registers with appropriate values, given the `period`.
 // 3. Call the _reload function to move the LOAD values into the Counters
-intervalTimer_status_t intervalTimer_initCountDown(uint32_t timerNumber,
-                                                   double period);
+void intervalTimer_initCountDown(uint32_t timerNumber, double period);
 
 // This function starts the interval timer running.
 // If the interval timer is already running, this function does nothing.
 // timerNumber indicates which timer should start running.
+// Make sure to only change the Enable Timer bit of the register and not modify
+// the other bits.
 void intervalTimer_start(uint32_t timerNumber);
 
 // This function stops a running interval timer.
 // If the interval time is currently stopped, this function does nothing.
 // timerNumber indicates which timer should stop running.
+// Make sure to only change the Enable Timer bit of the register and not modify
+// the other bits.
 void intervalTimer_stop(uint32_t timerNumber);
 
 // This function is called whenever you want to reload the Counter values
@@ -69,6 +65,9 @@ void intervalTimer_reload(uint32_t timerNumber);
 // Note that it should not be an error to call this function on a running timer
 // though it usually makes more sense to call this after intervalTimer_stop()
 // has been called. The timerNumber argument determines which timer is read.
+// In cascade mode you will need to read the upper and lower 32-bit registers,
+// concatenate them into a 64-bit counter value, and then perform the conversion
+// to a double seconds value.
 double intervalTimer_getTotalDurationInSeconds(uint32_t timerNumber);
 
 // Enable the interrupt output of the given timer.

@@ -14,7 +14,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <xparameters.h>
 
 #include "armInterrupts.h"
-#include "armTimer.h"
 #include "bhTester.h"
 #include "buttonHandler.h"
 #include "config.h"

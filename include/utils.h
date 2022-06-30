@@ -9,14 +9,15 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef UTILS
+#define UTILS
 
 void utils_msDelay(long ms);
 
+// Emulator only.
 // Sleeps the userThread while waiting for an event, that may be:
 // a timer, or a mouse-event, for example. This function is implemented
 // in utils.cpp in the emulator.
 void utils_sleep();
 
-#endif /* UTILS_H_ */
+#endif /* UTILS */

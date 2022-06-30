@@ -74,7 +74,7 @@ void isr_1s() {
   intervalTimer_ackInterrupt(INTERRUPTS_TIMER_1_IRQ);
   interrupts_ack(INTERRUPTS_TIMER_1_MASK);
 
-  enum touchscreen_status_e ts_status = touchscreen_get_status();
+  touchscreen_status_t ts_status = touchscreen_get_status();
   if (ts_status != TOUCHSCREEN_PRESSED) {
     clockDisplay_advanceTimeOneSecond();
   }

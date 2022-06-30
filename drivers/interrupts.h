@@ -24,21 +24,35 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define INTERRUPTS_TIMER_2_MASK 0x04
 
 // Initialize interrupt hardware
-int32_t interrupts_init();
+// This function should:
+// 1. Configure AXI INTC registers to:
+//  - Enable interrupt output (see Master Enable Register)
+//  - Disable all interrupt input lines.
+// 2. Enable the Interrupt system on the ARM processor, and register an ISR
+// handler function. This is done by calling:
+//  - armInterrupts_init()
+//  - armInterrupts_setupIntc(isr_fcn_ptr)
+//  - armInterrupts_enable()
+void interrupts_init();
 
-// Enable interrupt line(s)
-// irq_mask: Bitmask of lines to enable
-// This function only enables interrupt lines, ie, a 0 bit in irq_mask
-//	will not disable the interrupt line
-void interrupts_irq_enable(uint8_t irq_mask);
-void interrupts_irq_disable(uint8_t irq_mask);
-
+// Register a callback function (fcn) for a given interrupt input number (irq).
 void interrupts_register(uint8_t irq, void (*fcn)());
 
-void interrupts_isr(void *context);
+// Enable interrupt line(s)
+// irq_mask: Bitmask of interrupt lines to enable
+// This function only enables interrupt lines, it does not disable them.
+// (bits with '0' value in the mask will not disable the interrupt line)
+// Hint: The AXI Intc has a register specifically to handle this behavior.
+void interrupts_irq_enable(uint8_t irq_mask);
 
-uint32_t interrupts_pending();
+// Disable interrupt line(s)
+// irq_mask: Bitmask of interrupt lines to disable
+// This function only disables interrupt lines, it does not enable them.
+// Hint: The AXI Intc has a register specifically to handle this behavior.
+void interrupts_irq_disable(uint8_t irq_mask);
 
+// Acknowledge interrupt line(s)
+// irq_mask: Bitmask of interrupt lines to acknowledge and clear.
 void interrupts_ack(uint8_t irq_mask);
 
 #endif /* INTERRUPTS */

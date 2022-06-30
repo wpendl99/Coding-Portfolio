@@ -19,8 +19,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define BUTTONS_BTN2_MASK 0x4
 #define BUTTONS_BTN3_MASK 0x8
 
-// Initializes the button driver software and hardware. Returns one of the
-// defined status values (above).
+// Initializes the button driver software and hardware.
 void buttons_init();
 
 // Returns the current value of all 4 buttons as the lower 4 bits of the
