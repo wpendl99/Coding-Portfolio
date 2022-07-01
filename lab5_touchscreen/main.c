@@ -6,7 +6,7 @@
 #include "touchscreen.h"
 #include "utils.h"
 
-#define PERIOD_MS 10
+#define PERIOD_S 0.01
 #define CIRCLE_RADIUS 40
 #define MS_PER_S 1000
 
@@ -47,7 +47,7 @@ int main() {
   // Initialize drivers
   display_init();
   interrupts_init();
-  touchscreen_init(PERIOD_MS);
+  touchscreen_init(PERIOD_S);
 
   // Fill screen black
   display_fillScreen(DISPLAY_BLACK);
@@ -55,8 +55,7 @@ int main() {
   // Set up interrupts
   interrupts_register(INTERRUPTS_TIMER_0_IRQ, isr);
 
-  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0,
-                              PERIOD_MS / (double)MS_PER_S);
+  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, PERIOD_S);
   intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_0);
   intervalTimer_start(INTERVAL_TIMER_TIMER_0);
   interrupts_irq_enable(1 << INTERRUPTS_TIMER_0_IRQ);

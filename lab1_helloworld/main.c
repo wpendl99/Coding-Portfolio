@@ -14,8 +14,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "display.h"
 
 #define TEXT_SIZE 2
-#define CURSOR_X 0
-#define CURSOR_Y 0
+#define CURSOR_X 10
+#define CURSOR_Y (DISPLAY_HEIGHT / 2)
 
 // Print out "hello world" on both the console and the LCD screen.
 int main() {

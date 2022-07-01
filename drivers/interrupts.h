@@ -35,7 +35,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 //  - armInterrupts_enable()
 void interrupts_init();
 
-// Register a callback function (fcn) for a given interrupt input number (irq).
+// Register a callback function (fcn is a function pointer to this callback
+// function) for a given interrupt input number (irq).  When this interrupt
+// input is active, fcn will be called.
 void interrupts_register(uint8_t irq, void (*fcn)());
 
 // Enable interrupt line(s)
