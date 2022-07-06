@@ -20,7 +20,9 @@ void touchscreen_tick();
 // Return the current status of the touchscreen
 touchscreen_status_t touchscreen_get_status();
 
-// Acknowledge the touchscreen touch
+// Acknowledge the touchscreen touch.  This function will only have effect when
+// the touchscreen is in the TOUCHSCREEN_RELEASED status, and will cause it to
+// switch to the TOUCHSCREEN_IDLE status.
 void touchscreen_ack_touch();
 
 // Get the (x,y) location of the last touchscreen touch
