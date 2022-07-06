@@ -11,10 +11,13 @@ repo_root_dir = pathlib.Path(__file__).parent.absolute()
 dirs_to_format = ["lab", "drivers", "lasertag"]
 extensions_to_format = [".c", ".h"]
 
-dirs_to_exclude = [
+dirs_files_to_exclude = [
     "build/",
     "build_emu",
     "platforms/hw/",
+    "platforms/emulator/include/xparameters.h",
+    "platforms/emulator/include/xparameters_ps.h",
+    "platforms/emulator/include/xil_types.h",
     "platforms/zybo/xil_arm_toolchain/bsp",
     "lasertag/sounds",
     "old_digilent_files_solns",
@@ -47,14 +50,14 @@ def main():
         d_rel = str(d.relative_to(repo_root_dir))
 
         exclude = False
-        for dir_re in dirs_to_exclude:
+        for dir_re in dirs_files_to_exclude:
             if re.match(dir_re, d_rel):
                 exclude = True
                 break
         if exclude:
             continue
 
-        # If --all option is set, match against everything except the black-list (dirs_to_exclude_from_all),
+        # If --all option is set, match against everything,
         # otherwise match against the white list (dirs_to_format)
         if args.all:
             dirs_matched.append(d)
@@ -69,6 +72,10 @@ def main():
     for d in dirs_matched:
         for ext in extensions_to_format:
             for f in d.glob("*" + ext):
+
+                # Skip excluded files
+                if str(f.relative_to(repo_root_dir)) in dirs_files_to_exclude:
+                    continue
 
                 # The first command performs a diff on the original file and the
                 # clang-format output to see if clang-format will change anything
