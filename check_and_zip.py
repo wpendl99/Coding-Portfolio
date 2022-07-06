@@ -21,7 +21,7 @@ checker_path = repo_path / "tools" / "checker"
 
 
 class TermColors:
-    """ Terminal codes for printing in color """
+    """Terminal codes for printing in color"""
 
     # pylint: disable=too-few-public-methods
 
@@ -36,19 +36,19 @@ class TermColors:
 
 
 def print_color(color, *msg):
-    """ Print a message in color """
+    """Print a message in color"""
     print(color + " ".join(str(item) for item in msg), TermColors.END)
 
 
 def error(*msg, returncode=-1):
-    """ Print an error message and exit program """
+    """Print an error message and exit program"""
 
     print_color(TermColors.RED, "ERROR:", " ".join(str(item) for item in msg))
     sys.exit(returncode)
 
 
 def format_code():
-    """ Run ./format.py to format student code """
+    """Run ./format.py to format student code"""
     print_color(TermColors.BLUE, "Formatting code")
 
     subprocess.run(
@@ -61,7 +61,7 @@ def format_code():
 
 
 def clone_student_repo():
-    """ Clone a clean 330 student repo into 'test_repo_path', deleting existing one if it exists """
+    """Clone a clean 330 student repo into 'test_repo_path', deleting existing one if it exists"""
 
     # Delete existing repo
     shutil.rmtree(test_repo_path, ignore_errors=True)
@@ -85,13 +85,20 @@ def clone_student_repo():
     return True
 
 
+def get_lab_folder_name(lab):
+    if lab == "lab1":
+        return "lab1_helloworld"
+    else:
+        return lab
+
+
 def get_files_to_copy_and_zip(lab):
-    """ Build a list of (src,dest) files to copy into the temp repo given the lab """
+    """Build a list of (src,dest) files to copy into the temp repo given the lab"""
 
     print_color(TermColors.BLUE, "Enumerating files to copy/zip")
 
     chk_lab_path = checker_path / lab
-    src_lab_path = repo_path / lab
+    src_lab_path = repo_path / get_lab_folder_name(lab)
     src_libs_path = repo_path / "drivers"
     dest_libs_path = test_repo_path / "drivers"
     dest_lab_path = test_repo_path / lab
@@ -186,7 +193,7 @@ def get_files_to_copy_and_zip(lab):
 
 
 def copy_solution_files(files_to_copy):
-    """ Copy student files to the temp repo """
+    """Copy student files to the temp repo"""
 
     print_color(TermColors.BLUE, "Copying your solution files to the test_repo")
 
@@ -199,7 +206,7 @@ def copy_solution_files(files_to_copy):
 
 
 def build(milestone):
-    """ Run cmake/make """
+    """Run cmake/make"""
 
     if milestone:
         print_color(TermColors.BLUE, "Trying to build (-D" + milestone + "=1)")
@@ -251,7 +258,7 @@ def build(milestone):
 
 
 def run(lab):
-    """ Run the lab program in the emulator """
+    """Run the lab program in the emulator"""
     try:
         subprocess.run([str(build_path / lab / (lab + ".elf"))], check=True)
     except KeyboardInterrupt:
@@ -259,7 +266,7 @@ def run(lab):
 
 
 def zip(lab, files):
-    """ Zip the lab files """
+    """Zip the lab files"""
 
     zip_path = repo_path / (getpass.getuser() + "_" + lab + ".zip")
     print_color(TermColors.BLUE, "Creating zip file", zip_path.relative_to(repo_path))
@@ -279,7 +286,7 @@ def zip(lab, files):
 
 
 def get_milestones(lab):
-    """ Return the different milestones for the lab.  """
+    """Return the different milestones for the lab."""
 
     # Return list of configurations in (name, CMAKE_DEFINE) format
     if lab == "lab3":
@@ -318,7 +325,7 @@ def get_milestones(lab):
 
 
 def main():
-    """ Copy files into temp repo, build and run lab """
+    """Copy files into temp repo, build and run lab"""
 
     parser = argparse.ArgumentParser()
     parser.add_argument(

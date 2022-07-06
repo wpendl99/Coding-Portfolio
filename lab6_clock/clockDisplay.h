@@ -9,10 +9,12 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef CLOCKDISPLAY_H
-#define CLOCKDISPLAY_H
+#ifndef CLOCKDISPLAY
+#define CLOCKDISPLAY
 
 #include <stdbool.h>
+
+#include "display.h"
 
 #ifndef CLOCKDISPLAY_TEXT_SIZE
 // The default text size, which should be provided to setTextSize() to draw the
@@ -32,7 +34,7 @@ void clockDisplay_updateTimeDisplay(bool forceUpdateAll);
 
 // Reads the touched coordinates and performs the increment or decrement,
 // depending upon the touched region.
-void clockDisplay_performIncDec();
+void clockDisplay_performIncDec(display_point_t point);
 
 // Advances the time forward by 1 second and update the display.
 void clockDisplay_advanceTimeOneSecond();
@@ -40,4 +42,4 @@ void clockDisplay_advanceTimeOneSecond();
 // Run a test of clock-display functions.
 void clockDisplay_runTest();
 
-#endif /* CLOCKDISPLAY_H */
+#endif /* CLOCKDISPLAY */

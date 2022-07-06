@@ -13,13 +13,13 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdio.h>
 #include <xparameters.h>
 
+#include "armInterrupts.h"
 #include "bhTester.h"
 #include "buttonHandler.h"
 #include "config.h"
 #include "display.h"
 #include "flashSequence.h"
 #include "fsTester.h"
-#include "interrupts.h"
 #include "intervalTimer.h"
 #include "leds.h"
 #include "simonControl.h"
@@ -118,6 +118,10 @@ void tickAll() {
 }
 #endif
 
+volatile int interrupt_flag = 0;
+
+void isr_function();
+
 // All programs share the same main.
 // Differences are limited to test_init() and isr_function().
 int main() {
@@ -125,34 +129,36 @@ int main() {
   // Init all interrupts (but does not enable the interrupts at the devices).
   // Prints an error message if an internal failure occurs because the argument
   // = true.
-  interrupts_initAll(true);
-  interrupts_setPrivateTimerLoadValue(TIMER_LOAD_VALUE);
-  interrupts_enableTimerGlobalInts();
+  armInterrupts_init();
+  armInterrupts_setupTimer(isr_function, CONFIG_TIMER_PERIOD);
+
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
   int32_t personalInterruptCount = 0;
+
   // Start the private ARM timer running.
-  interrupts_startArmPrivateTimer();
+  // interrupts_startArmPrivateTimer();
+
   // Enable interrupts at the ARM.
-  interrupts_enableArmInts();
+  armInterrupts_enable();
+
   while (1) {
-    if (interrupts_isrFlagGlobal) {
+    if (interrupt_flag) {
       // Count ticks.
       personalInterruptCount++;
       tickAll();
-      interrupts_isrFlagGlobal = 0;
+      interrupt_flag = 0;
       if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
         break;
       utils_sleep();
     }
   }
-  interrupts_disableArmInts();
-  printf("isr invocation count: %d\n", interrupts_isrInvocationCount());
+  armInterrupts_disable();
+
+  printf("isr invocation count: %d\n", armInterrupts_getTimerIsrCount());
   printf("internal interrupt count: %d\n", personalInterruptCount);
   return 0;
 }
 
 // Interrupt routine
-void isr_function() {
-  // Empty for flag method (flag set elsewhere)
-}
+void isr_function() { interrupt_flag = true; }

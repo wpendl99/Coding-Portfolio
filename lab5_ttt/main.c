@@ -13,31 +13,31 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include <stdio.h>
 
-#include "clockControl.h"
-#include "clockDisplay.h"
 #include "config.h"
 #include "display.h"
 #include "interrupts.h"
 #include "leds.h"
+#include "testBoards.h"
+#include "ticTacToeControl.h"
+#include "ticTacToeDisplay.h"
 #include "utils.h"
 #include "xparameters.h"
 
 #define MILESTONE_1 1
 #define MILESTONE_2 2
+#define MILESTONE_3 3
 
 ////////////////////////////////////////////////////////////////////////////////
-// Uncomment one of the following lines to run Milestone 1 or 2      ///////////
+// Uncomment one of the following lines to run Milestone 1, 2, or 3    /////////
 ////////////////////////////////////////////////////////////////////////////////
 // #define RUN_PROGRAM MILESTONE_1
 // #define RUN_PROGRAM MILESTONE_2
+// #define RUN_PROGRAM MILESTONE_3
 
-// If nothing is uncommented above, run milestone 2
+// If nothing is uncommented above, run milestone 3
 #ifndef RUN_PROGRAM
-#define RUN_PROGRAM MILESTONE_2
+#define RUN_PROGRAM MILESTONE_3
 #endif
-
-#define RUN_DISPLAY_TEST_MSG "Running Milestone 1: clockDisplay_test()\n"
-#define RUN_MILESTONE_2_MSG "Running Milestone 2: full clock lab\n"
 
 // The formula for computing the load value is based upon the formula
 // from 4.1.1
@@ -52,33 +52,41 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define TOTAL_SECONDS 20
 #define MAX_INTERRUPT_COUNT (INTERRUPTS_PER_SECOND * TOTAL_SECONDS)
 
+#define MILESTONE1_MESSAGE "Running testBoards()\n"
+#define MILESTONE2_MESSAGE "Running ticTacToeDisplay_runTest()\n"
+#define MILESTONE3_MESSAGE "Running tic-tac-toe game\n"
+
 // Keep track of how many times isr_function() is called.
 uint32_t isr_functionCallCount = 0;
 
-// This main uses isr_function() to invoked clockControl_tick().
 int main() {
-#if (RUN_PROGRAM == MILESTONE_1)
-  printf(RUN_DISPLAY_TEST_MSG);
-  clockDisplay_runTest();
+#if RUN_PROGRAM == MILESTONE_1
+  printf(MILESTONE1_MESSAGE);
+  testBoards();
 
-#elif (RUN_PROGRAM == MILESTONE_2)
-  // This main() uses the flag method to invoke clockControl_tick().
+#elif RUN_PROGRAM == MILESTONE_2
+  printf(MILESTONE2_MESSAGE);
+  ticTacToeDisplay_runTest();
 
-  printf(RUN_MILESTONE_2_MSG);
+#elif RUN_PROGRAM == MILESTONE_3
+  printf(MILESTONE3_MESSAGE);
+  // Flag method
+
   // Initialize the GPIO LED driver and print out an error message if it fails
-  // (argument = true). You need to init the LEDs so that LD4 can function as
-  // a heartbeat.
+  // (argument = true). You need to init the LEDs so that LD4 can function
+  // as a heartbeat.
   leds_init(true);
+
   // Init all interrupts (but does not enable the interrupts at the devices).
-  // Prints an error message if an internal failure occurs because the
-  // argument = true.
+  // Prints an error message if an internal failure occurs because the argument
+  // = true.
   interrupts_initAll(true);
   interrupts_setPrivateTimerLoadValue(TIMER_LOAD_VALUE);
   interrupts_enableTimerGlobalInts();
-  // Initialization of the clock display is not time-dependent, do it outside
-  // of the state machine.
-  clockDisplay_init();
-  clockControl_init();
+
+  // Initialization ticTacToe SM
+  ticTacToeControl_init();
+
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.
   int32_t personalInterruptCount = 0;
@@ -87,25 +95,25 @@ int main() {
   // Enable interrupts at the ARM.
   interrupts_enableArmInts();
   while (1) {
-    if (interrupts_isrFlagGlobal) {
+    if (armInterrupts_timerFlag) {
       // Count ticks.
       personalInterruptCount++;
-      clockControl_tick();
-      interrupts_isrFlagGlobal = 0;
+      ticTacToeControl_tick();
+      armInterrupts_timerFlag = 0;
       if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
         break;
       utils_sleep();
-      fflush(stdout);
     }
   }
   interrupts_disableArmInts();
   printf("isr invocation count: %d\n", interrupts_isrInvocationCount());
   printf("internal interrupt count: %d\n", personalInterruptCount);
-#endif
   return 0;
+
+#endif
 }
 
-// Keep this empty
-// The 'interrupts_isrFlagGlobal' flag will be automatically set on an interrupt
-// behind the scenes.  We don't need to set it here.
-void isr_function() {}
+// Interrupt routine
+void isr_function() {
+  // Empty for flag method (flag set elsewhere)
+}

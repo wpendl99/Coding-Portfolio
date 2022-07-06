@@ -8,19 +8,13 @@ source code for personal or educational use.
 
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
+#ifndef CLOCKCONTROL
+#define CLOCKCONTROL
 
-#include "drivers/buttons.h"
-#include "drivers/switches.h"
+// Standard tick function.
+void clockControl_tick();
 
-// Run switches and buttons runTest functions
-int main() {
-  switches_runTest();
-  buttons_runTest();
+// Call this before you call clockControl_tick().
+void clockControl_init(double period_s);
 
-  return 0;
-}
-
-// Interrupt routine
-void isr_function() {
-  // Empty for now.
-}
+#endif /* CLOCKCONTROL */

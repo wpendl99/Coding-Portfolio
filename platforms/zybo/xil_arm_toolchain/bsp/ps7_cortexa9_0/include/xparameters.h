@@ -18,8 +18,8 @@
 
 #include "xparameters_ps.h"
 
-#define STDIN_BASEADDRESS 0xF8800000
-#define STDOUT_BASEADDRESS 0xF8800000
+#define STDIN_BASEADDRESS 0xE0001000
+#define STDOUT_BASEADDRESS 0xE0001000
 
 /******************************************************************/
 
@@ -34,10 +34,10 @@
 /* Definitions for driver AXI_I2S_ADI */
 #define XPAR_AXI_I2S_ADI_NUM_INSTANCES 1
 
-/* Definitions for peripheral AXI_I2S_ADI_1 */
-#define XPAR_AXI_I2S_ADI_1_DEVICE_ID 0
-#define XPAR_AXI_I2S_ADI_1_S_AXI_BASEADDR 0x43C20000
-#define XPAR_AXI_I2S_ADI_1_S_AXI_HIGHADDR 0x43C2FFFF
+/* Definitions for peripheral AXI_I2S_ADI_0 */
+#define XPAR_AXI_I2S_ADI_0_DEVICE_ID 0
+#define XPAR_AXI_I2S_ADI_0_S00_AXI_BASEADDR 0x43C20000
+#define XPAR_AXI_I2S_ADI_0_S00_AXI_HIGHADDR 0x43C2FFFF
 
 
 /******************************************************************/
@@ -354,6 +354,60 @@
 
 /******************************************************************/
 
+/* Definition for input Clock */
+#define XPAR_INTC_MAX_NUM_INTR_INPUTS 3
+#define XPAR_XINTC_HAS_IPR 1
+#define XPAR_XINTC_HAS_SIE 1
+#define XPAR_XINTC_HAS_CIE 1
+#define XPAR_XINTC_HAS_IVR 1
+/* Definitions for driver INTC */
+#define XPAR_XINTC_NUM_INSTANCES 1
+
+/* Definitions for peripheral AXI_INTC_0 */
+#define XPAR_AXI_INTC_0_DEVICE_ID 0
+#define XPAR_AXI_INTC_0_BASEADDR 0x41800000
+#define XPAR_AXI_INTC_0_HIGHADDR 0x4180FFFF
+#define XPAR_AXI_INTC_0_KIND_OF_INTR 0xFFFFFFF8
+#define XPAR_AXI_INTC_0_HAS_FAST 0
+#define XPAR_AXI_INTC_0_IVAR_RESET_VALUE 0x0000000000000010
+#define XPAR_AXI_INTC_0_NUM_INTR_INPUTS 3
+#define XPAR_AXI_INTC_0_NUM_SW_INTR 0
+#define XPAR_AXI_INTC_0_ADDR_WIDTH 32
+
+
+/******************************************************************/
+
+#define XPAR_INTC_SINGLE_BASEADDR 0x41800000
+#define XPAR_INTC_SINGLE_HIGHADDR 0x4180FFFF
+#define XPAR_INTC_SINGLE_DEVICE_ID XPAR_AXI_INTC_0_DEVICE_ID
+#define XPAR_AXI_INTC_0_TYPE 0U
+#define XPAR_AXI_TIMER_0_INTERRUPT_MASK 0X000001U
+#define XPAR_AXI_INTC_0_AXI_TIMER_0_INTERRUPT_INTR 0U
+#define XPAR_AXI_TIMER_1_INTERRUPT_MASK 0X000002U
+#define XPAR_AXI_INTC_0_AXI_TIMER_1_INTERRUPT_INTR 1U
+#define XPAR_AXI_TIMER_2_INTERRUPT_MASK 0X000004U
+#define XPAR_AXI_INTC_0_AXI_TIMER_2_INTERRUPT_INTR 2U
+
+/******************************************************************/
+
+/* Canonical definitions for peripheral AXI_INTC_0 */
+#define XPAR_INTC_0_DEVICE_ID XPAR_AXI_INTC_0_DEVICE_ID
+#define XPAR_INTC_0_BASEADDR 0x41800000U
+#define XPAR_INTC_0_HIGHADDR 0x4180FFFFU
+#define XPAR_INTC_0_KIND_OF_INTR 0xFFFFFFF8U
+#define XPAR_INTC_0_HAS_FAST 0U
+#define XPAR_INTC_0_IVAR_RESET_VALUE 0x0000000000000010U
+#define XPAR_INTC_0_NUM_INTR_INPUTS 3U
+#define XPAR_INTC_0_NUM_SW_INTR 0U
+#define XPAR_INTC_0_ADDR_WIDTH 32U
+#define XPAR_INTC_0_INTC_TYPE 0U
+
+#define XPAR_INTC_0_TMRCTR_0_VEC_ID XPAR_AXI_INTC_0_AXI_TIMER_0_INTERRUPT_INTR
+#define XPAR_INTC_0_TMRCTR_1_VEC_ID XPAR_AXI_INTC_0_AXI_TIMER_1_INTERRUPT_INTR
+#define XPAR_INTC_0_TMRCTR_2_VEC_ID XPAR_AXI_INTC_0_AXI_TIMER_2_INTERRUPT_INTR
+
+/******************************************************************/
+
 /* Definitions for driver QSPIPS */
 #define XPAR_XQSPIPS_NUM_INSTANCES 1
 
@@ -376,6 +430,16 @@
 #define XPAR_XQSPIPS_0_QSPI_MODE 0
 #define XPAR_XQSPIPS_0_QSPI_BUS_WIDTH 2
 
+
+/******************************************************************/
+
+/* Definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_AXI_INTC_0_IRQ_INTR 91U
+
+/******************************************************************/
+
+/* Canonical definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_INTC_0_VEC_ID XPAR_FABRIC_AXI_INTC_0_IRQ_INTR
 
 /******************************************************************/
 
@@ -478,8 +542,8 @@
 #define XPAR_SPI_TFT_0_DEVICE_ID 0U
 #define XPAR_SPI_TFT_0_BASEADDR 0x41E00000U
 #define XPAR_SPI_TFT_0_HIGHADDR 0x41E0FFFFU
-#define XPAR_SPI_TFT_0_FIFO_DEPTH 16U
 #define XPAR_SPI_TFT_0_FIFO_EXIST 1U
+#define XPAR_SPI_TFT_0_FIFO_DEPTH 16U
 #define XPAR_SPI_TFT_0_SPI_SLAVE_ONLY 0U
 #define XPAR_SPI_TFT_0_NUM_SS_BITS 2U
 #define XPAR_SPI_TFT_0_NUM_TRANSFER_BITS 8U
@@ -493,8 +557,8 @@
 #define XPAR_SPI_0_DEVICE_ID 0U
 #define XPAR_SPI_0_BASEADDR 0x41E00000U
 #define XPAR_SPI_0_HIGHADDR 0x41E0FFFFU
-#define XPAR_SPI_0_FIFO_DEPTH 16U
 #define XPAR_SPI_0_FIFO_EXIST 1U
+#define XPAR_SPI_0_FIFO_DEPTH 16U
 #define XPAR_SPI_0_SPI_SLAVE_ONLY 0U
 #define XPAR_SPI_0_NUM_SS_BITS 2U
 #define XPAR_SPI_0_NUM_TRANSFER_BITS 8U
@@ -599,6 +663,30 @@
 
 
 /******************************************************************/
+/* Definitions for driver UARTPS */
+#define XPAR_XUARTPS_NUM_INSTANCES 1
+
+/* Definitions for peripheral PS7_UART_1 */
+#define XPAR_PS7_UART_1_DEVICE_ID 0
+#define XPAR_PS7_UART_1_BASEADDR 0xE0001000
+#define XPAR_PS7_UART_1_HIGHADDR 0xE0001FFF
+#define XPAR_PS7_UART_1_UART_CLK_FREQ_HZ 50000000
+#define XPAR_PS7_UART_1_HAS_MODEM 0
+
+
+/******************************************************************/
+
+/* Canonical definitions for peripheral PS7_UART_1 */
+#define XPAR_XUARTPS_0_DEVICE_ID XPAR_PS7_UART_1_DEVICE_ID
+#define XPAR_XUARTPS_0_BASEADDR 0xE0001000
+#define XPAR_XUARTPS_0_HIGHADDR 0xE0001FFF
+#define XPAR_XUARTPS_0_UART_CLK_FREQ_HZ 50000000
+#define XPAR_XUARTPS_0_HAS_MODEM 0
+
+
+/******************************************************************/
+
+/* Definition for input Clock */
 /* Definitions for driver USBPS */
 #define XPAR_XUSBPS_NUM_INSTANCES 1
 
