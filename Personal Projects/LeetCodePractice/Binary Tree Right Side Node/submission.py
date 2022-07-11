@@ -19,7 +19,7 @@ class Solution:
             queue.append(root)
 
         while len(queue):
-            res.append(q[-1].val)
+            res.append(queue[-1].val)
             for i in range(len(queue)):
                 nextNode = queue.popleft()
                 if nextNode.left:
