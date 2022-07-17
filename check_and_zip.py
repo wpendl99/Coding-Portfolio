@@ -91,6 +91,8 @@ def get_lab_folder_name(lab):
         return "lab1_helloworld"
     elif lab == "lab2":
         return "lab2_gpio"
+    elif lab == "lab3":
+        return "lab3_timer"
     else:
         return lab
 

@@ -127,9 +127,9 @@ void testUpCounter() {
 
 // Test rollover for up counter
 void testUpRollover() {
-  printf(
-      "Testing cascade mode; call `start` and then wait another ~%d seconds.\n",
-      M1_ROLLOVER_DELAY_S);
+  printf("Testing cascade mode; calling `start` and then waiting another ~%d "
+         "seconds.\n",
+         M1_ROLLOVER_DELAY_S);
   intervalTimer_start(INTERVAL_TIMER_0);
   utils_msDelay(M1_ROLLOVER_DELAY_S * MS_PER_S);
 
@@ -257,9 +257,9 @@ void testUpCounterAll() {
          M2_SECOND_DELAY_SECONDS,
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_2));
 
-  printf(
-      "Testing cascade mode; call `start` and then wait another ~%d seconds.\n",
-      M1_ROLLOVER_DELAY_S);
+  printf("Testing cascade mode; calling `start` and then waiting another ~%d "
+         "seconds.\n",
+         M1_ROLLOVER_DELAY_S);
   intervalTimer_start(INTERVAL_TIMER_0);
   intervalTimer_start(INTERVAL_TIMER_1);
   intervalTimer_start(INTERVAL_TIMER_2);
