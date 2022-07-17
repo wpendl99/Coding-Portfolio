@@ -93,6 +93,8 @@ def get_lab_folder_name(lab):
         return "lab2_gpio"
     elif lab == "lab3":
         return "lab3_timer"
+    elif lab == "lab4":
+        return "lab4_interrupts"
     else:
         return lab
 
@@ -128,6 +130,13 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "switches.c", dest_libs_path, False))
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, True))
     elif lab == "lab4":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, True))
+        files.append((src_lab_path / "interrupt_test.c", dest_lab_path, True))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+
+    elif lab == "lab6":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
@@ -191,7 +200,7 @@ def get_files_to_copy_and_zip(lab):
     else:
         print(
             len(files),
-            "files to copy,",
+            "files to copy to the fresh code base,",
             len([f for f in files if f[2]]),
             "of these will be included in the submission zip archive.",
         )
@@ -300,14 +309,6 @@ def get_milestones(lab):
     if lab == "lab3":
         return [
             ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
-            ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
-        ]
-    elif lab == "lab4":
-        return [
-            ("MILESTONE_1_SIZE6", "RUN_PROGRAM_MILESTONE_1_SIZE6"),
-            ("MILESTONE_1_SIZE5", "RUN_PROGRAM_MILESTONE_1_SIZE5"),
-            ("MILESTONE_1_SIZE4", "RUN_PROGRAM_MILESTONE_1_SIZE4"),
-            ("MILESTONE_1_SIZE3", "RUN_PROGRAM_MILESTONE_1_SIZE3"),
             ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
         ]
     elif lab == "lab5":
