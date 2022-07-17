@@ -14,15 +14,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #include <stdint.h>
 
-#define INTERRUPTS_TIMER_0_IRQ 0
-#define INTERRUPTS_TIMER_0_MASK 0x01
-
-#define INTERRUPTS_TIMER_1_IRQ 1
-#define INTERRUPTS_TIMER_1_MASK 0x02
-
-#define INTERRUPTS_TIMER_2_IRQ 2
-#define INTERRUPTS_TIMER_2_MASK 0x04
-
 // Initialize interrupt hardware
 // This function should:
 // 1. Configure AXI INTC registers to:
