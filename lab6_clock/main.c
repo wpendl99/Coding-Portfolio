@@ -64,15 +64,13 @@ uint32_t isr_functionCallCount = 0;
 extern volatile int interrupt_occurred;
 
 void isr() {
-  intervalTimer_ackInterrupt(INTERVAL_TIMER_TIMER_0);
-  interrupts_ack(INTERRUPTS_TIMER_0_MASK);
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_0);
   clockControl_tick();
   touchscreen_tick();
 }
 
 void isr_1s() {
-  intervalTimer_ackInterrupt(INTERRUPTS_TIMER_1_IRQ);
-  interrupts_ack(INTERRUPTS_TIMER_1_MASK);
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_1);
 
   touchscreen_status_t ts_status = touchscreen_get_status();
   if (ts_status != TOUCHSCREEN_PRESSED) {
@@ -99,19 +97,19 @@ int main() {
   touchscreen_init(CONFIG_TIMER_PERIOD);
 
   interrupts_init();
-  interrupts_register(INTERRUPTS_TIMER_0_IRQ, isr);
-  interrupts_register(INTERRUPTS_TIMER_1_IRQ, isr_1s);
-  interrupts_irq_enable((1 << INTERRUPTS_TIMER_0_IRQ) |
-                        (1 << INTERRUPTS_TIMER_1_IRQ));
+  interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr);
+  interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr_1s);
+  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_MASK |
+                        INTERVAL_TIMER_1_INTERRUPT_MASK);
 
-  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_0, CONFIG_TIMER_PERIOD);
-  intervalTimer_initCountDown(INTERVAL_TIMER_TIMER_1, 1.0);
+  intervalTimer_initCountDown(INTERVAL_TIMER_0, CONFIG_TIMER_PERIOD);
+  intervalTimer_initCountDown(INTERVAL_TIMER_1, 1.0);
 
-  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_0);
-  intervalTimer_enableInterrupt(INTERVAL_TIMER_TIMER_1);
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_0);
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_1);
 
-  intervalTimer_start(INTERVAL_TIMER_TIMER_0);
-  intervalTimer_start(INTERVAL_TIMER_TIMER_1);
+  intervalTimer_start(INTERVAL_TIMER_0);
+  intervalTimer_start(INTERVAL_TIMER_1);
 
   // Keep track of your personal interrupt count. Want to make sure that you
   // don't miss any interrupts.

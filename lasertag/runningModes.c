@@ -46,10 +46,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
   FILTER_FREQUENCY_COUNT // As many histogram bars as user filter frequencies.
 
 #define ISR_CUMULATIVE_TIMER INTERVAL_TIMER_TIMER_0 // Used by the ISR.
-#define TOTAL_RUNTIME_TIMER                                                    \
-  INTERVAL_TIMER_TIMER_1 // Used to compute total run-time.
+#define TOTAL_RUNTIME_TIMER INTERVAL_TIMER_1 // Used to compute total run-time.
 #define MAIN_CUMULATIVE_TIMER                                                  \
-  INTERVAL_TIMER_TIMER_2 // Used to compute cumulative run-time in main.
+  INTERVAL_TIMER_2 // Used to compute cumulative run-time in main.
 
 #define SYSTEM_TICKS_PER_HISTOGRAM_UPDATE                                      \
   30000 // Update the histogram about 3 times per second.
