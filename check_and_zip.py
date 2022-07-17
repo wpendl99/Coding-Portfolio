@@ -5,6 +5,7 @@ This module is used to verify that your lab solution will build with the lab
 submission system.
 """
 
+import atexit
 import pathlib
 import argparse
 import shutil
@@ -14,10 +15,10 @@ import zipfile
 import getpass
 import re
 
-repo_path = pathlib.Path(__file__).absolute().parent.resolve()
-test_repo_path = (repo_path / "test_repo").resolve()
-build_path = test_repo_path / "build"
-checker_path = repo_path / "tools" / "checker"
+STUDENT_REPO_PATH = pathlib.Path(__file__).absolute().parent.resolve()
+TEST_REPO_PATH = (STUDENT_REPO_PATH / "test_repo").resolve()
+BUILD_PATH = TEST_REPO_PATH / "build"
+CHECKER_PATH = STUDENT_REPO_PATH / "tools" / "checker"
 
 
 class TermColors:
@@ -49,13 +50,13 @@ def error(*msg, returncode=-1):
 
 def format_code():
     """Run ./format.py to format student code"""
-    print_color(TermColors.BLUE, "Formatting code")
+    print_color(TermColors.BLUE, "Running ./format to format your code")
 
     subprocess.run(
         [
             "./format.py",
         ],
-        cwd=repo_path,
+        cwd=STUDENT_REPO_PATH,
         check=True,
     )
 
@@ -64,20 +65,20 @@ def clone_student_repo():
     """Clone a clean 330 student repo into 'test_repo_path', deleting existing one if it exists"""
 
     # Delete existing repo
-    shutil.rmtree(test_repo_path, ignore_errors=True)
+    shutil.rmtree(TEST_REPO_PATH, ignore_errors=True)
 
-    if test_repo_path.is_dir():
-        error("Could not delete", test_repo_path)
+    if TEST_REPO_PATH.is_dir():
+        error("Could not delete", TEST_REPO_PATH)
 
-    print_color(TermColors.BLUE, "Cloning ecen330 base repo into", test_repo_path)
+    print_color(TermColors.BLUE, "Cloning ecen330 base repo into", TEST_REPO_PATH)
     proc = subprocess.run(
         [
             "git",
             "clone",
             "https://github.com/byu-cpe/ecen330_student",
-            str(test_repo_path),
+            str(TEST_REPO_PATH),
         ],
-        cwd=repo_path,
+        cwd=STUDENT_REPO_PATH,
         check=False,
     )
     if proc.returncode:
@@ -88,6 +89,8 @@ def clone_student_repo():
 def get_lab_folder_name(lab):
     if lab == "lab1":
         return "lab1_helloworld"
+    elif lab == "lab2":
+        return "lab2_gpio"
     else:
         return lab
 
@@ -97,24 +100,25 @@ def get_files_to_copy_and_zip(lab):
 
     print_color(TermColors.BLUE, "Enumerating files to copy/zip")
 
-    chk_lab_path = checker_path / lab
-    src_lab_path = repo_path / get_lab_folder_name(lab)
-    src_libs_path = repo_path / "drivers"
-    dest_libs_path = test_repo_path / "drivers"
-    dest_lab_path = test_repo_path / lab
-    lasertag_path = repo_path / "lasertag"
+    chk_lab_path = CHECKER_PATH / lab
+    src_lab_path = STUDENT_REPO_PATH / get_lab_folder_name(lab)
+    src_libs_path = STUDENT_REPO_PATH / "drivers"
+    dest_libs_path = TEST_REPO_PATH / "drivers"
+    dest_lab_path = TEST_REPO_PATH / get_lab_folder_name(lab)
+    lasertag_path = STUDENT_REPO_PATH / "lasertag"
 
     # Build a list of files
     # Each entry in this list is a tuple in format (src - pathlib.Path, dest - pathlib.Path, include_in_zip? - boolean)
     files = []
-    files.append((checker_path / "CMakeLists.txt", test_repo_path, False))
-    files.append((chk_lab_path / "checker.cmake", test_repo_path, False))
+    files.append((CHECKER_PATH / "CMakeLists.txt", TEST_REPO_PATH, False))
+    files.append((chk_lab_path / "checker.cmake", TEST_REPO_PATH, False))
     if lab == "lab1":
         files.append((src_lab_path / "main.c", dest_lab_path, True))
     elif lab == "lab2":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, True))
         files.append((src_libs_path / "switches.c", dest_libs_path, True))
+        files.append((src_lab_path / "gpioTest.c", dest_lab_path, True))
     elif lab == "lab3":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
@@ -199,7 +203,9 @@ def copy_solution_files(files_to_copy):
 
     # files_to_copy provides a list of files in (src_path, dest_path, include_in_zip?) format
     for (src, dest, _) in files_to_copy:
-        print("Copying", src.relative_to(repo_path), "to", dest.relative_to(repo_path))
+        print(
+            "Copying", src.relative_to(STUDENT_REPO_PATH), "to", dest.relative_to(STUDENT_REPO_PATH)
+        )
         if not src.is_file():
             error("Required file", src, "does not exist.")
         shutil.copy(src, dest)
@@ -213,23 +219,23 @@ def build(milestone):
     else:
         print_color(TermColors.BLUE, "Trying to build")
 
-    print_color(TermColors.BLUE, "Removing build directory (" + str(build_path) + ")")
-    shutil.rmtree(build_path)
-    print_color(TermColors.BLUE, "Creating build directory (" + str(build_path) + ")")
-    build_path.mkdir()
+    print_color(TermColors.BLUE, "Removing build directory (" + str(BUILD_PATH) + ")")
+    shutil.rmtree(BUILD_PATH)
+    print_color(TermColors.BLUE, "Creating build directory (" + str(BUILD_PATH) + ")")
+    BUILD_PATH.mkdir()
 
     # Run cmake
     cmake_cmd = ["cmake", "..", "-DEMU=1"]
     if milestone is not None:
         cmake_cmd.append("-D" + milestone + "=1")
-    proc = subprocess.run(cmake_cmd, cwd=build_path, check=False)
+    proc = subprocess.run(cmake_cmd, cwd=BUILD_PATH, check=False)
     if proc.returncode:
         return False
 
     # Run make
     proc = subprocess.run(
         ["make", "-j4"],
-        cwd=build_path,
+        cwd=BUILD_PATH,
         check=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -260,7 +266,7 @@ def build(milestone):
 def run(lab):
     """Run the lab program in the emulator"""
     try:
-        subprocess.run([str(build_path / lab / (lab + ".elf"))], check=True)
+        subprocess.run([str(BUILD_PATH / get_lab_folder_name(lab) / (lab + ".elf"))], check=True)
     except KeyboardInterrupt:
         print()
 
@@ -268,8 +274,8 @@ def run(lab):
 def zip(lab, files):
     """Zip the lab files"""
 
-    zip_path = repo_path / (getpass.getuser() + "_" + lab + ".zip")
-    print_color(TermColors.BLUE, "Creating zip file", zip_path.relative_to(repo_path))
+    zip_path = STUDENT_REPO_PATH / (getpass.getuser() + "_" + lab + ".zip")
+    print_color(TermColors.BLUE, "Creating zip file", zip_path.relative_to(STUDENT_REPO_PATH))
     if zip_path.is_file():
         print("Deleting existing file.")
         zip_path.unlink()
@@ -278,11 +284,11 @@ def zip(lab, files):
         # Loop through files that are marked for zip (f[2] == True)
         for f in (f for f in files if f[2]):
             if not f[0].is_file():
-                error(f[0].relative_to(repo_path), "does not exist")
-            print("Adding", f[0].relative_to(repo_path))
+                error(f[0].relative_to(STUDENT_REPO_PATH), "does not exist")
+            print("Adding", f[0].relative_to(STUDENT_REPO_PATH))
             zf.write(f[0], arcname=f[0].name)
 
-    return zip_path.relative_to(repo_path)
+    return zip_path.relative_to(STUDENT_REPO_PATH)
 
 
 def get_milestones(lab):
@@ -327,6 +333,8 @@ def get_milestones(lab):
 def main():
     """Copy files into temp repo, build and run lab"""
 
+    atexit.register(exit_handler)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "lab",
@@ -345,7 +353,7 @@ def main():
         ],
     )
     parser.add_argument(
-        "--no_run", action="store_true", help="Test the lab build, but don't run the emualtor"
+        "--no_run", action="store_true", help="Test the lab build, but don't run the emulator"
     )
     args = parser.parse_args()
 
@@ -415,11 +423,13 @@ def main():
     # Zip it
     zip_relpath = zip(args.lab, files)
 
-    # Delete test repo
-    print_color(TermColors.BLUE, "Removing", test_repo_path.name)
-    shutil.rmtree(test_repo_path, ignore_errors=True)
-
     print_color(TermColors.BLUE, "Created", zip_relpath, "\nDone.")
+
+
+def exit_handler():
+    # Delete test repo
+    print_color(TermColors.BLUE, "Removing", TEST_REPO_PATH.name)
+    shutil.rmtree(TEST_REPO_PATH, ignore_errors=True)
 
 
 if __name__ == "__main__":

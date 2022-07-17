@@ -22,7 +22,7 @@ if (NOT EMU)
     link_directories(platforms/zybo)
     link_directories(platforms/zybo/xil_arm_toolchain)
 
-    # Set this variable to the name of libraries that board executables needs to link to
+    # Set this variable to the name of libraries that board executables need to link to
     set(330_LIBS c gcc zybo xil c)
 
     # Pass the BOARD variable to the compiler, so it can be used in #ifdef statements
@@ -65,8 +65,8 @@ add_custom_command(TARGET BOOT.bin
     COMMAND echo '//arch = zynq; split = false; format = BIN' > 330.bif
     COMMAND echo 'the_ROM_image:' >> 330.bif
     COMMAND echo '{' >> 330.bif
-    COMMAND echo '  [bootloader]../hw/fsbl.elf' >> 330.bif
-    COMMAND echo '  ../hw/330_hw_system.bit' >> 330.bif
+    COMMAND echo '  [bootloader]../platforms/hw/fsbl.elf' >> 330.bif
+    COMMAND echo '  ../platforms/hw/330_hw_system.bit' >> 330.bif
     COMMAND echo '  \${ELF_PATH}' >> 330.bif
     COMMAND echo '}' >> 330.bif
     COMMAND ${XIL_VIVADO_PATH}/bin/bootgen -image 330.bif -arch zynq -o BOOT.bin -w on

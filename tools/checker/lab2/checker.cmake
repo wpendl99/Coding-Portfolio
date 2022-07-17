@@ -1,2 +1,2 @@
 add_subdirectory(drivers)
-add_subdirectory(lab2)
+add_subdirectory(lab2_gpio)
