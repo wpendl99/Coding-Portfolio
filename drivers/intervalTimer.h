@@ -23,13 +23,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define INTERVAL_TIMER_2 2
 
 #define INTERVAL_TIMER_0_INTERRUPT_IRQ 0
-#define INTERVAL_TIMER_0_INTERRUPT_MASK 0x01
-
 #define INTERVAL_TIMER_1_INTERRUPT_IRQ 1
-#define INTERVAL_TIMER_1_INTERRUPT_MASK 0x02
-
 #define INTERVAL_TIMER_2_INTERRUPT_IRQ 2
-#define INTERVAL_TIMER_2_INTERRUPT_MASK 0x04
 
 // You must configure the interval timer before you use it:
 // 1. Set the Timer Control/Status Registers such that:
