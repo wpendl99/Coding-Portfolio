@@ -90,7 +90,7 @@ int main() {
   intervalTimer_initCountDown(INTERVAL_TIMER_0, PERIOD_S);
   intervalTimer_enableInterrupt(INTERVAL_TIMER_0);
   intervalTimer_start(INTERVAL_TIMER_0);
-  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_MASK);
+  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_IRQ);
 
   while (1) {
   }

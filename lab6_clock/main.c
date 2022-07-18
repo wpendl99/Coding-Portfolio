@@ -55,8 +55,8 @@ int main() {
   interrupts_init();
   interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr);
   interrupts_register(INTERVAL_TIMER_1_INTERRUPT_IRQ, isr_1s);
-  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_MASK |
-                        INTERVAL_TIMER_1_INTERRUPT_MASK);
+  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_IRQ);
+  interrupts_irq_enable(INTERVAL_TIMER_1_INTERRUPT_IRQ);
 
   // Configure the Timers
   intervalTimer_initCountDown(INTERVAL_TIMER_0, TICK_PERIOD);

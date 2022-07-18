@@ -9,13 +9,14 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#ifndef TICTACTOECONTROL_H
-#define TICTACTOECONTROL_H
+#ifndef TICTACTOECONTROL
+#define TICTACTOECONTROL
 
-// Tick the tic-tac-toe conroller state machine
+// Tick the tic-tac-toe controller state machine
 void ticTacToeControl_tick();
 
-// Initialize the tic-tac-toe conroller state machine
-void ticTacToeControl_init();
+// Initialize the tic-tac-toe controller state machine,
+// providing the tick period, in seconds.
+void ticTacToeControl_init(double period_s);
 
-#endif /* TICTACTOECONTROL_H */
+#endif /* TICTACTOECONTROL */

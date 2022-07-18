@@ -31,21 +31,10 @@ void interrupts_init();
 // input is active, fcn will be called.
 void interrupts_register(uint8_t irq, void (*fcn)());
 
-// Enable interrupt line(s)
-// irq_mask: Bitmask of interrupt lines to enable
-// This function only enables interrupt lines, it does not disable them.
-// (bits with '0' value in the mask will not disable the interrupt line)
-// Hint: The AXI Intc has a register specifically to handle this behavior.
-void interrupts_irq_enable(uint8_t irq_mask);
+// Enable single input interrupt line, given by irq number.
+void interrupts_irq_enable(uint8_t irq);
 
-// Disable interrupt line(s)
-// irq_mask: Bitmask of interrupt lines to disable
-// This function only disables interrupt lines, it does not enable them.
-// Hint: The AXI Intc has a register specifically to handle this behavior.
-void interrupts_irq_disable(uint8_t irq_mask);
-
-// Acknowledge interrupt line(s)
-// irq_mask: Bitmask of interrupt lines to acknowledge and clear.
-void interrupts_ack(uint8_t irq_mask);
+// Disable single input interrupt line, given by irq number.
+void interrupts_irq_disable(uint8_t irq);
 
 #endif /* INTERRUPTS */
