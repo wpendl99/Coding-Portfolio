@@ -11,10 +11,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef CLOCKCONTROL
 #define CLOCKCONTROL
 
-// Standard tick function.
-void clockControl_tick();
-
-// Call this before you call clockControl_tick().
+// Initialize the clock control state machine, with a given period in seconds.
 void clockControl_init(double period_s);
+
+// Tick the clock control state machine
+void clockControl_tick();
 
 #endif /* CLOCKCONTROL */
