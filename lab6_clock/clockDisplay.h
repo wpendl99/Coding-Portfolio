@@ -12,8 +12,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef CLOCKDISPLAY
 #define CLOCKDISPLAY
 
-#include <stdbool.h>
-
 #include "display.h"
 
 // Initialize clock display
