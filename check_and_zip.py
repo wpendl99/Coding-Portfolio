@@ -95,6 +95,8 @@ def get_lab_folder_name(lab):
         return "lab3_timer"
     elif lab == "lab4":
         return "lab4_interrupts"
+    elif lab == "lab5":
+        return "lab5_touchscreen"
     else:
         return lab
 
@@ -135,6 +137,12 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "interrupts.c", dest_libs_path, True))
         files.append((src_lab_path / "interrupt_test.c", dest_lab_path, True))
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+    elif lab == "lab5":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, True))
 
     elif lab == "lab6":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
@@ -144,7 +152,7 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
         files.append((src_lab_path / "clockControl.c", dest_lab_path, True))
         files.append((src_lab_path / "clockDisplay.c", dest_lab_path, True))
-    elif lab == "lab5":
+    elif lab == "lab5_old":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
@@ -311,7 +319,7 @@ def get_milestones(lab):
             ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
             ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
         ]
-    elif lab == "lab5":
+    elif lab == "lab5_old":
         return [
             ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
             ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
