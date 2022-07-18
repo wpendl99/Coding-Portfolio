@@ -23,8 +23,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "leds.h"
 #include "touchscreen.h"
 #include "utils.h"
-// #include "xil_io.h"
-// #include "xparameters.h"
 
 #define MILESTONE_1 1
 #define MILESTONE_2 2
@@ -42,21 +40,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define RUN_DISPLAY_TEST_MSG "========== Running Milestone 1 ==========\n"
 #define RUN_MILESTONE_2_MSG "Running Milestone 2: full clock lab\n"
-
-// The formula for computing the load value is based upon the formula
-// from 4.1.1
-// (calculating timer intervals) in the Cortex-A9 MPCore Technical Reference
-// Manual 4-2. Assuming that the prescaler = 0, the formula for computing the
-// load value based upon the desired period is: load-value = (period *
-// timer-clock) - 1
-
-// #define TIMER_CLOCK_FREQUENCY (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
-// #define TIMER_LOAD_VALUE ((CONFIG_TIMER_PERIOD * TIMER_CLOCK_FREQUENCY)
-// - 1.0)
-
-// #define INTERRUPTS_PER_SECOND (1.0 / CONFIG_TIMER_PERIOD)
-// #define TOTAL_SECONDS 20
-// #define MAX_INTERRUPT_COUNT (INTERRUPTS_PER_SECOND * TOTAL_SECONDS)
 
 // Keep track of how many times isr_function() is called.
 uint32_t isr_functionCallCount = 0;
@@ -98,7 +81,7 @@ int main() {
 
   interrupts_init();
   interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr);
-  interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr_1s);
+  interrupts_register(INTERVAL_TIMER_1_INTERRUPT_IRQ, isr_1s);
   interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_MASK |
                         INTERVAL_TIMER_1_INTERRUPT_MASK);
 
@@ -111,34 +94,8 @@ int main() {
   intervalTimer_start(INTERVAL_TIMER_0);
   intervalTimer_start(INTERVAL_TIMER_1);
 
-  // Keep track of your personal interrupt count. Want to make sure that you
-  // don't miss any interrupts.
-  // int32_t personalInterruptCount = 0;
-
-  // Start the private ARM timer running.
-  // interrupts_startArmPrivateTimer();
-
-  // Enable interrupts at the ARM.
-  // interrupts_enableArmInts();
-
-  // while (1) {
-  //   if (armInterrupts_timerFlag) {
-  //     // Count ticks.
-  //     personalInterruptCount++;
-  //     clockControl_tick();
-  //     armInterrupts_timerFlag = 0;
-  //     if (personalInterruptCount >= MAX_INTERRUPT_COUNT)
-  //       break;
-  //     utils_sleep();
-  //     fflush(stdout);
-  //   }
-  // }
-
   while (1)
     ;
-    // interrupts_disableArmInts();
-    // printf("isr invocation count: %d\n", interrupts_isrInvocationCount());
-    // printf("internal interrupt count: %d\n", personalInterruptCount);
 #endif
   return 0;
 }
