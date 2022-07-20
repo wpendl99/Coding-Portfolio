@@ -40,13 +40,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define MILESTONE_1_MSG "Running Milestone 1, wamDisplay_runMilestone1_test()\n"
 #define MILESTONE_2_MSG "Running Milestone 2, Whack-a-mole game\n"
 
-// The formula for computing the load value is based upon the formula from 4.1.1
-// (calculating timer intervals) in the Cortex-A9 MPCore Technical Reference
-// Manual 4-2. Assuming that the prescaler = 0, the formula for computing the
-// load value based upon the desired period is: load-value = (period *
-// timer-clock) - 1
-#define TIMER_CLOCK_FREQUENCY (XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)
-#define TIMER_LOAD_VALUE ((CONFIG_TIMER_PERIOD * TIMER_CLOCK_FREQUENCY) - 1.0)
+static void isr_function();
 
 #define MAX_ACTIVE_MOLES 1 // Start out with this many moles.
 #define MAX_MISSES 50      // Game is over when there are this many misses.
@@ -117,9 +111,7 @@ void wamMain_tick() {
 
       // Mole count selected via slide switches.
       // Disable interrupts, draw mole board, enable interrupts.
-      interrupts_disableArmInts();
       wamDisplay_drawMoleBoard();
-      interrupts_enableArmInts();
       wamControl_enable();
       wamMain_currentState = wamMain_runGame_st;
     }
@@ -134,10 +126,8 @@ void wamMain_tick() {
     break;
   case wamMain_gameOver_st:
     wamControl_disable();
-    interrupts_disableArmInts();
     wamDisplay_drawGameOverScreen(); // Draw the game-over screen.
     wamDisplay_resetAllScoresAndLevel();
-    interrupts_enableArmInts();
     wamMain_currentState = wamMain_init_st;
     break;
   default:
@@ -160,11 +150,15 @@ int main() {
   // Init all interrupts (but does not enable the interrupts at the devices).
   // Prints an error message if an internal failure occurs because the argument
   // = true.
-  interrupts_initAll(true); // Init the interrupt code.
-  interrupts_setPrivateTimerLoadValue(
-      TIMER_LOAD_VALUE);              // Set the timer period.
-  interrupts_enableTimerGlobalInts(); // Enable interrupts at the timer.
-  interrupts_startArmPrivateTimer();  // Start the private ARM timer running.
+
+  interrupts_init();
+  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_IRQ);
+  interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr_function);
+
+  intervalTimer_initCountDown(INTERVAL_TIMER_0, CONFIG_TIMER_PERIOD);
+  intervalTimer_enableInterrupt(INTERVAL_TIMER_0);
+  intervalTimer_start(INTERVAL_TIMER_0);
+
   display_init(); // Init the display (make sure to do it only once).
   wamControl_setMaxActiveMoles(
       MAX_ACTIVE_MOLES); // Start out with this many simultaneous active moles.
@@ -178,15 +172,15 @@ int main() {
   wamMain_currentState = wamMain_init_st;
   randomSeed = 0;
   utils_msDelay(500);
-  interrupts_enableArmInts();
   while (1) {
     utils_sleep();
   }
 #endif
 }
 
-void isr_function() {
+static void isr_function() {
 #if RUN_PROGRAM == MILESTONE_2
+  intervalTimer_ackInterrupt(INTERVAL_TIMER_0);
   wamMain_tick();
   wamControl_tick();
 #endif
