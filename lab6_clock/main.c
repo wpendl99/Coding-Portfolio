@@ -13,15 +13,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include <stdio.h>
 
-// #include "armInterrupts.h"
 #include "clockControl.h"
 #include "clockDisplay.h"
-// #include "display.h"
 #include "interrupts.h"
 #include "intervalTimer.h"
-// #include "leds.h"
 #include "touchscreen.h"
-// #include "utils.h"
 
 #define TICK_PERIOD 50E-3
 
