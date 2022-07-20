@@ -29,8 +29,8 @@ void ticTacToeDisplay_drawX(tictactoe_location_t location, bool erase);
 // erase == true means to erase the X by redrawing it as background.
 void ticTacToeDisplay_drawO(tictactoe_location_t location, bool erase);
 
-// After a touch has been detected and after the proper delay, this returns the
-// location where the user touched the board.
+// For a given touch location on the touchscreen, this function returns the
+// corresponding tictactoe board location.
 tictactoe_location_t
 ticTacToeDisplay_getLocationFromPoint(display_point_t point);
 
