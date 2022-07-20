@@ -9,8 +9,6 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 
 #include "interrupts.h"
@@ -19,20 +17,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "ticTacToeDisplay.h"
 #include "touchscreen.h"
 #include "utils.h"
-
-#define MILESTONE_1 1
-#define MILESTONE_2 2
-
-////////////////////////////////////////////////////////////////////////////////
-// Uncomment one of the following lines to run Milestone 1 or 2  ///////////////
-////////////////////////////////////////////////////////////////////////////////
-// #define RUN_PROGRAM MILESTONE_1
-// #define RUN_PROGRAM MILESTONE_2
-
-// If nothing is uncommented above, run milestone 2
-#ifndef RUN_PROGRAM
-#define RUN_PROGRAM MILESTONE_2
-#endif
 
 #define TICK_PERIOD 50E-3
 #define TOTAL_SECONDS 30
@@ -53,11 +37,6 @@ volatile bool interrupt_flag;
 static void isr();
 
 int main() {
-#if RUN_PROGRAM == MILESTONE_1
-  printf(MILESTONE1_MESSAGE);
-  testBoards();
-
-#elif RUN_PROGRAM == MILESTONE_2
   printf(MILESTONE2_MESSAGE);
 
   // Initialize Modules
@@ -100,8 +79,6 @@ int main() {
   printf("interrupt count: %d\n", interrupt_count);
   printf("isr invocation count: %d\n", isr_run_count);
   return 0;
-
-#endif
 }
 
 // Interrupt routine
