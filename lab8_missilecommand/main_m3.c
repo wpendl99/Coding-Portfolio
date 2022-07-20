@@ -6,6 +6,7 @@
 #include "gameControl.h"
 #include "interrupts.h"
 #include "intervalTimer.h"
+#include "touchscreen.h"
 
 #define RUNTIME_S 60
 #define RUNTIME_TICKS ((int)(RUNTIME_S / CONFIG_TIMER_PERIOD))
@@ -32,7 +33,6 @@ int main() {
   interrupts_init();
   interrupts_register(INTERVAL_TIMER_0_INTERRUPT_IRQ, isr);
   interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_IRQ);
-  interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_IRQ);
 
   intervalTimer_initCountDown(INTERVAL_TIMER_0, CONFIG_TIMER_PERIOD);
   intervalTimer_enableInterrupt(INTERVAL_TIMER_0);
@@ -46,6 +46,7 @@ int main() {
     isr_handled_count++;
 
     gameControl_tick();
+    touchscreen_tick();
   }
   printf("Handled %d of %d interrupts\n", isr_handled_count,
          isr_triggered_count);
