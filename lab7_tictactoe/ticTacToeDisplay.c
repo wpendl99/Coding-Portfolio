@@ -44,7 +44,7 @@ void ticTacToeDisplay_init() {
 
 // Draws an X at the specified location
 // erase == true means to erase the X by redrawing it as background.
-column.void ticTacToeDisplay_drawX(tictactoe_location_t location, bool erase) {
+void ticTacToeDisplay_drawX(tictactoe_location_t location, bool erase) {
   uint16_t x1 = DISPLAY_WIDTH * location.column / 3 + PADX;
   uint16_t x2 = x1 + XO_WIDTH;
   uint16_t y1 = DISPLAY_HEIGHT * location.row / 3 + PADY;
