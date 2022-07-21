@@ -1,2 +1,2 @@
 add_subdirectory(drivers)
-add_subdirectory(lab6)
+add_subdirectory(lab6_clock)

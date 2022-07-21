@@ -89,16 +89,21 @@ def clone_student_repo():
 def get_lab_folder_name(lab):
     if lab == "lab1":
         return "lab1_helloworld"
-    elif lab == "lab2":
+    if lab == "lab2":
         return "lab2_gpio"
-    elif lab == "lab3":
+    if lab == "lab3":
         return "lab3_timer"
-    elif lab == "lab4":
+    if lab == "lab4":
         return "lab4_interrupts"
-    elif lab == "lab5":
+    if lab == "lab5":
         return "lab5_touchscreen"
-    else:
-        return lab
+    if lab == "lab6":
+        return "lab6_clock"
+    if lab == "lab7":
+        return "lab7_tictactoe"
+    if lab == "lab8":
+        return "lab8_missilecommand"
+    return lab
 
 
 def get_files_to_copy_and_zip(lab):
@@ -143,27 +148,35 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
         files.append((src_libs_path / "touchscreen.c", dest_libs_path, True))
-
     elif lab == "lab6":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
-        files.append((src_libs_path / "buttons.c", dest_libs_path, False))
-        files.append((src_libs_path / "switches.c", dest_libs_path, False))
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
         files.append((src_lab_path / "clockControl.c", dest_lab_path, True))
-        files.append((src_lab_path / "clockDisplay.c", dest_lab_path, True))
-    elif lab == "lab5_old":
+    elif lab == "lab7":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
         files.append((src_libs_path / "switches.c", dest_libs_path, False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
         files.append((src_lab_path / "ticTacToeControl.c", dest_lab_path, True))
-        files.append((src_lab_path / "ticTacToeDisplay.c", dest_lab_path, True))
         files.append((src_lab_path / "minimax.c", dest_lab_path, True))
         files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
+    elif lab == "lab8":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_lab_path / "missile.c", dest_lab_path, True))
+        files.append((src_lab_path / "plane.c", dest_lab_path, True))
+        files.append((src_lab_path / "gameControl.c", dest_lab_path, True))
 
-    elif lab == "lab6":
+    elif lab == "simon":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
@@ -175,7 +188,7 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "simonDisplay.c", dest_lab_path, True))
         files.append((src_lab_path / "simonControl.c", dest_lab_path, True))
         files.append((src_lab_path / "globals.c", dest_lab_path, True))
-    elif lab == "lab7":
+    elif lab == "wam":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
@@ -230,13 +243,10 @@ def copy_solution_files(files_to_copy):
         shutil.copy(src, dest)
 
 
-def build(milestone):
+def build():
     """Run cmake/make"""
 
-    if milestone:
-        print_color(TermColors.BLUE, "Trying to build (-D" + milestone + "=1)")
-    else:
-        print_color(TermColors.BLUE, "Trying to build")
+    print_color(TermColors.BLUE, "Trying to build")
 
     print_color(TermColors.BLUE, "Removing build directory (" + str(BUILD_PATH) + ")")
     shutil.rmtree(BUILD_PATH)
@@ -245,8 +255,6 @@ def build(milestone):
 
     # Run cmake
     cmake_cmd = ["cmake", "..", "-DEMU=1"]
-    if milestone is not None:
-        cmake_cmd.append("-D" + milestone + "=1")
     proc = subprocess.run(cmake_cmd, cwd=BUILD_PATH, check=False)
     if proc.returncode:
         return False
@@ -282,10 +290,12 @@ def build(milestone):
     return True
 
 
-def run(lab):
+def run(lab, elf_name=None):
     """Run the lab program in the emulator"""
+    if elf_name is None:
+        elf_name = lab + ".elf"
     try:
-        subprocess.run([str(BUILD_PATH / get_lab_folder_name(lab) / (lab + ".elf"))], check=True)
+        subprocess.run([str(BUILD_PATH / get_lab_folder_name(lab) / elf_name)], check=True)
     except KeyboardInterrupt:
         print()
 
@@ -316,26 +326,19 @@ def get_milestones(lab):
     # Return list of configurations in (name, CMAKE_DEFINE) format
     if lab == "lab3":
         return [
-            ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
-            ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
-        ]
-    elif lab == "lab5_old":
-        return [
-            ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
-            ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
-            ("MILESTONE_3", "RUN_PROGRAM_MILESTONE_3"),
-        ]
-    elif lab == "lab6":
-        return [
-            ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
-            ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
-            ("MILESTONE_3", "RUN_PROGRAM_MILESTONE_3"),
-            ("MILESTONE_4", "RUN_PROGRAM_MILESTONE_4"),
+            ("MILESTONE_1", "lab3_m1.elf"),
+            ("MILESTONE_2", "lab3_m2.elf"),
         ]
     elif lab == "lab7":
         return [
-            ("MILESTONE_1", "RUN_PROGRAM_MILESTONE_1"),
-            ("MILESTONE_2", "RUN_PROGRAM_MILESTONE_2"),
+            ("MILESTONE_1", "lab7_m1.elf"),
+            ("MILESTONE_2", "lab7_m2.elf"),
+        ]
+    elif lab == "lab8":
+        return [
+            ("MILESTONE_1", "lab8_m1.elf"),
+            ("MILESTONE_2", "lab8_m2.elf"),
+            ("MILESTONE_3", "lab8_m3.elf"),
         ]
     else:
         return [("main", None)]
@@ -357,6 +360,7 @@ def main():
             "lab5",
             "lab6",
             "lab7",
+            "lab8",
             "390m3-1",
             "390m3-2",
             "390m3-3",
@@ -394,42 +398,43 @@ def main():
             # Copy over necessary files to test repo
             copy_solution_files(files)
 
-            # Loop through configs
-            for (config_name, config_define) in get_milestones(args.lab):
-                build_and_run = True
+            # See if the code builds
+            build_success = build()
+
+            if not build_success:
+                s = ""
+                while s not in ("y", "n"):
+                    s = input(
+                        TermColors.RED
+                        + "Build failed for "
+                        + config_name
+                        + ". Continue? (y/n)"
+                        + TermColors.END
+                    ).lower()
+                if s == "n":
+                    sys.exit(0)
+
+            # Loop through executables
+            for (milestone_name, elf_name) in get_milestones(args.lab):
                 if args.no_run:
-                    print_color(TermColors.BLUE, "Now Testing", config_name)
+                    print_color(TermColors.BLUE, "Now Testing", milestone_name)
                 else:
                     input(
                         TermColors.BLUE
                         + "Now Testing "
-                        + config_name
+                        + milestone_name
                         + ". Hit <Enter> to continue."
                         + TermColors.END
                     )
 
-                # See if the code builds
-                if build(config_define):
-                    # Run it
-                    if not args.no_run:
-                        print_color(TermColors.BLUE, "Running", args.lab, config_name)
-                        print_color(
-                            TermColors.BLUE,
-                            "If the emulator won't close, press Ctrl+C in this terminal.",
-                        )
-                        run(args.lab)
-                else:
-                    s = ""
-                    while s not in ("y", "n"):
-                        s = input(
-                            TermColors.RED
-                            + "Build failed for "
-                            + config_name
-                            + ". Continue? (y/n)"
-                            + TermColors.END
-                        ).lower()
-                    if s == "n":
-                        sys.exit(0)
+                # Run it
+                if not args.no_run:
+                    print_color(TermColors.BLUE, "Running", args.lab, milestone_name)
+                    print_color(
+                        TermColors.BLUE,
+                        "If the emulator won't close, press Ctrl+C in this terminal.",
+                    )
+                    run(args.lab, elf_name)
 
     # Zip it
     zip_relpath = zip(args.lab, files)
