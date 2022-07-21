@@ -27,7 +27,9 @@ int main() {
   isr_triggered_count = 0;
   isr_handled_count = 0;
 
-  gameControl_init();
+  display_init();
+  touchscreen_init(CONFIG_TIMER_PERIOD);
+  gameControl_init(true);
 
   // Initialize timer interrupts
   interrupts_init();
