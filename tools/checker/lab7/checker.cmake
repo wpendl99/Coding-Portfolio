@@ -1,2 +1,2 @@
 add_subdirectory(drivers)
-add_subdirectory(lab7)
+add_subdirectory(lab7_tictactoe)
