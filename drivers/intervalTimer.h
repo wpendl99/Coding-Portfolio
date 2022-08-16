@@ -62,7 +62,8 @@ void intervalTimer_stop(uint32_t timerNumber);
 // timer to zero.  For a count-down timer, this will reset the timer to
 // its initial count-down value.  The load registers should have already
 // been set in the appropriate `init` function, so there is no need to set
-// them here.
+// them here.  You just need to enable the load (and remember to disable it
+// immediately after otherwise you will be loading indefinitely).
 void intervalTimer_reload(uint32_t timerNumber);
 
 // Use this function to ascertain how long a given timer has been running.
