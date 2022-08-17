@@ -99,9 +99,9 @@ def get_lab_folder_name(lab):
         return "lab5_touchscreen"
     if lab == "lab6":
         return "lab6_clock"
-    if lab == "lab7":
+    if lab in ("lab7m1", "lab7m2"):
         return "lab7_tictactoe"
-    if lab == "lab8":
+    if lab in ("lab8m1", "lab8m2", "lab8m3"):
         return "lab8_missilecommand"
     return lab
 
@@ -155,7 +155,12 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
         files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
         files.append((src_lab_path / "clockControl.c", dest_lab_path, True))
-    elif lab == "lab7":
+    elif lab == "lab7m1":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_lab_path / "minimax.c", dest_lab_path, True))
+        files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
+    elif lab == "lab7m2":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
@@ -166,7 +171,21 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "ticTacToeControl.c", dest_lab_path, True))
         files.append((src_lab_path / "minimax.c", dest_lab_path, True))
         files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
-    elif lab == "lab8":
+    elif lab == "lab8m1":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_lab_path / "missile.c", dest_lab_path, True))
+    elif lab == "lab8m2":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_lab_path / "missile.c", dest_lab_path, True))
+        files.append((src_lab_path / "gameControl.c", dest_lab_path, True))
+    elif lab == "lab8m3":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
@@ -359,8 +378,11 @@ def main():
             "lab4",
             "lab5",
             "lab6",
-            "lab7",
-            "lab8",
+            "lab7m1",
+            "lab7m2",
+            "lab8m1",
+            "lab8m2",
+            "lab8m3",
             "390m3-1",
             "390m3-2",
             "390m3-3",
@@ -405,11 +427,7 @@ def main():
                 s = ""
                 while s not in ("y", "n"):
                     s = input(
-                        TermColors.RED
-                        + "Build failed for "
-                        + config_name
-                        + ". Continue? (y/n)"
-                        + TermColors.END
+                        TermColors.RED + "Build failed. Continue? (y/n)" + TermColors.END
                     ).lower()
                 if s == "n":
                     sys.exit(0)
