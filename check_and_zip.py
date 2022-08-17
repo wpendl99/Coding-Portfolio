@@ -345,10 +345,17 @@ def zip(lab, files):
         print("Created new zip file")
         # Loop through files that are marked for zip (f[2] == True)
         for f in (f for f in files if f[2]):
-            if not f[0].is_file():
+            if f[0].is_file(): 
+                # Write file to zip file
+                print("Adding", f[0].relative_to(STUDENT_REPO_PATH))
+                zf.write(f[0], arcname=f[0].name)
+            elif f[0].is_dir():
+                # Directory -- do a glob search and write all files to zip file
+                for sub_f in f[0].rglob("*"):
+                    print("Adding", sub_f.relative_to(STUDENT_REPO_PATH))
+                    zf.write(sub_f, arcname=sub_f.relative_to(f[0].parent))
+            else:
                 error(f[0].relative_to(STUDENT_REPO_PATH), "does not exist")
-            print("Adding", f[0].relative_to(STUDENT_REPO_PATH))
-            zf.write(f[0], arcname=f[0].name)
 
     return zip_path.relative_to(STUDENT_REPO_PATH)
 
