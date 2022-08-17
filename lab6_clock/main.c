@@ -38,6 +38,7 @@ void isr_1s() {
     clockDisplay_advanceTimeOneSecond();
 }
 
+// Main clock test application
 int main() {
   printf("Starting clock application\n");
 

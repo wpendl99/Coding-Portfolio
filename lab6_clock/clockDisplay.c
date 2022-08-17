@@ -232,7 +232,7 @@ static void updateTimeDisplay(bool forceUpdateAll) {
           currentMinutes, currentSeconds);
 
   // Loop through each character
-  for (int i = 0; i < CLOCK_TOTAL_CHAR_COUNT; i++) {
+  for (uint8_t i = 0; i < CLOCK_TOTAL_CHAR_COUNT; i++) {
     // Redraw any character that has changed.
     if (nextClockDisplayString[i] != currentClockDisplayString[i] ||
         forceUpdateAll) {
