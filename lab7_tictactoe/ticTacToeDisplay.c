@@ -30,6 +30,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define LEFT_LINE_X (DISPLAY_WIDTH / 3)
 #define RIGHT_LINE_X (DISPLAY_WIDTH * 2 / 3)
 
+#define X0 0
+#define Y0 0
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Globals /////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,10 +47,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // Inits the tic-tac-toe display, draws the lines that form the board.
 void ticTacToeDisplay_init() {
-  display_drawFastHLine(0, TOP_LINE_Y, DISPLAY_WIDTH, COLOR_GRID);
-  display_drawFastHLine(0, BOT_LINE_Y, DISPLAY_WIDTH, COLOR_GRID);
-  display_drawFastVLine(LEFT_LINE_X, 0, DISPLAY_HEIGHT, COLOR_GRID);
-  display_drawFastVLine(RIGHT_LINE_X, 0, DISPLAY_HEIGHT, COLOR_GRID);
+  display_drawFastHLine(X0, TOP_LINE_Y, DISPLAY_WIDTH, COLOR_GRID);
+  display_drawFastHLine(X0, BOT_LINE_Y, DISPLAY_WIDTH, COLOR_GRID);
+  display_drawFastVLine(LEFT_LINE_X, Y0, DISPLAY_HEIGHT, COLOR_GRID);
+  display_drawFastVLine(RIGHT_LINE_X, Y0, DISPLAY_HEIGHT, COLOR_GRID);
 }
 
 // Draws an X at the specified location
