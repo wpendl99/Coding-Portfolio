@@ -56,29 +56,25 @@ int main() {
 
 // Reads the timer1 registers based upon the offset.
 static uint32_t readTimer0Reg(uint32_t registerOffset) {
-  uint32_t address = XPAR_AXI_TIMER_0_BASEADDR +
-                     registerOffset; // Add the offset to the base address.
-  return Xil_In32(address);          // Read the register at that address.
+  uint32_t address = XPAR_AXI_TIMER_0_BASEADDR + registerOffset;
+  return Xil_In32(address);
 }
 static uint32_t readTimer1Reg(uint32_t registerOffset) {
-  uint32_t address = XPAR_AXI_TIMER_1_BASEADDR +
-                     registerOffset; // Add the offset to the base address.
-  return Xil_In32(address);          // Read the register at that address.
+  uint32_t address = XPAR_AXI_TIMER_1_BASEADDR + registerOffset;
+  return Xil_In32(address);
 }
 static uint32_t readTimer2Reg(uint32_t registerOffset) {
-  uint32_t address = XPAR_AXI_TIMER_2_BASEADDR +
-                     registerOffset; // Add the offset to the base address.
-  return Xil_In32(address);          // Read the register at that address.
+  uint32_t address = XPAR_AXI_TIMER_2_BASEADDR + registerOffset;
+  return Xil_In32(address);
 }
 
-// Test UP Counter for Timer 0
+// Test UP Counter for all timers
 static void testUpCounterAll() {
   printf("Calling `initCountUp` to initialize all the timers.\n");
   intervalTimer_initCountUp(INTERVAL_TIMER_0);
   intervalTimer_initCountUp(INTERVAL_TIMER_1);
   intervalTimer_initCountUp(INTERVAL_TIMER_2);
 
-  // Start timer 0.
   printf("Calling `start` to start all the timers.\n");
   intervalTimer_start(INTERVAL_TIMER_0);
   intervalTimer_start(INTERVAL_TIMER_1);
@@ -153,6 +149,7 @@ static void testUpCounterAll() {
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_2));
 }
 
+// Test down counter and interrupts for all timers
 static void testDownCounterAll() {
   printf("Calling `initCountDown` to initialize all the timers with a %ds "
          "period.\n",

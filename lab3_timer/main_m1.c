@@ -145,6 +145,7 @@ static void testUpRollover() {
          intervalTimer_getTotalDurationInSeconds(INTERVAL_TIMER_0));
 }
 
+// Test down counter of timer
 static void testDownCounter() {
   printf("Calling `initCountDown` to initialize the timer.\n");
   intervalTimer_initCountDown(INTERVAL_TIMER_0, M1_DOWN_PERIOD_S);
