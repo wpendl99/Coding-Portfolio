@@ -99,10 +99,12 @@ def get_lab_folder_name(lab):
         return "lab5_touchscreen"
     if lab == "lab6":
         return "lab6_clock"
-    if lab == "lab7":
+    if lab in ("lab7m1", "lab7m2"):
         return "lab7_tictactoe"
-    if lab == "lab8":
+    if lab in ("lab8m1", "lab8m2", "lab8m3"):
         return "lab8_missilecommand"
+    if lab == "lab9":
+        return "lab9_project"
     return lab
 
 
@@ -155,7 +157,12 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
         files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
         files.append((src_lab_path / "clockControl.c", dest_lab_path, True))
-    elif lab == "lab7":
+    elif lab == "lab7m1":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_lab_path / "minimax.c", dest_lab_path, True))
+        files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
+    elif lab == "lab7m2":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "buttons.c", dest_libs_path, False))
@@ -166,7 +173,21 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "ticTacToeControl.c", dest_lab_path, True))
         files.append((src_lab_path / "minimax.c", dest_lab_path, True))
         files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
-    elif lab == "lab8":
+    elif lab == "lab8m1":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_lab_path / "missile.c", dest_lab_path, True))
+    elif lab == "lab8m2":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        files.append((src_lab_path / "missile.c", dest_lab_path, True))
+        files.append((src_lab_path / "gameControl.c", dest_lab_path, True))
+    elif lab == "lab8m3":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
         files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
@@ -175,6 +196,15 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "missile.c", dest_lab_path, True))
         files.append((src_lab_path / "plane.c", dest_lab_path, True))
         files.append((src_lab_path / "gameControl.c", dest_lab_path, True))
+    elif lab == "lab9":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "buttons.c", dest_libs_path, False))
+        files.append((src_libs_path / "switches.c", dest_libs_path, False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        for f in src_lab_path.iterdir():
+            files.append((f, dest_lab_path, True))
 
     elif lab == "simon":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
@@ -238,9 +268,12 @@ def copy_solution_files(files_to_copy):
         print(
             "Copying", src.relative_to(STUDENT_REPO_PATH), "to", dest.relative_to(STUDENT_REPO_PATH)
         )
-        if not src.is_file():
+        if src.is_file():
+            shutil.copy(src, dest)
+        elif src.is_dir():
+            shutil.copytree(src, dest / src.name)
+        else:
             error("Required file", src, "does not exist.")
-        shutil.copy(src, dest)
 
 
 def build():
@@ -312,10 +345,17 @@ def zip(lab, files):
         print("Created new zip file")
         # Loop through files that are marked for zip (f[2] == True)
         for f in (f for f in files if f[2]):
-            if not f[0].is_file():
+            if f[0].is_file(): 
+                # Write file to zip file
+                print("Adding", f[0].relative_to(STUDENT_REPO_PATH))
+                zf.write(f[0], arcname=f[0].name)
+            elif f[0].is_dir():
+                # Directory -- do a glob search and write all files to zip file
+                for sub_f in f[0].rglob("*"):
+                    print("Adding", sub_f.relative_to(STUDENT_REPO_PATH))
+                    zf.write(sub_f, arcname=sub_f.relative_to(f[0].parent))
+            else:
                 error(f[0].relative_to(STUDENT_REPO_PATH), "does not exist")
-            print("Adding", f[0].relative_to(STUDENT_REPO_PATH))
-            zf.write(f[0], arcname=f[0].name)
 
     return zip_path.relative_to(STUDENT_REPO_PATH)
 
@@ -359,8 +399,12 @@ def main():
             "lab4",
             "lab5",
             "lab6",
-            "lab7",
-            "lab8",
+            "lab7m1",
+            "lab7m2",
+            "lab8m1",
+            "lab8m2",
+            "lab8m3",
+            "lab9",
             "390m3-1",
             "390m3-2",
             "390m3-3",
@@ -405,11 +449,7 @@ def main():
                 s = ""
                 while s not in ("y", "n"):
                     s = input(
-                        TermColors.RED
-                        + "Build failed for "
-                        + config_name
-                        + ". Continue? (y/n)"
-                        + TermColors.END
+                        TermColors.RED + "Build failed. Continue? (y/n)" + TermColors.END
                     ).lower()
                 if s == "n":
                     sys.exit(0)

@@ -4,10 +4,8 @@
 #include <stdbool.h>
 
 // Initialize the game control logic
-// milestone3 - whether to include milestone 3 features (plane and stats)
-//
 // This function will initialize all missiles, stats, plane, etc.
-void gameControl_init(bool milestone3);
+void gameControl_init();
 
 // Tick the game control logic
 //
