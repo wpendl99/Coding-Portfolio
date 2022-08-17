@@ -21,6 +21,7 @@ static enum {
 
 uint8_t radius;
 
+// Tick the test code application
 void test_tick() {
   // Get the current status of the touchscreen
   touchscreen_status_t status = touchscreen_get_status();
@@ -64,8 +65,9 @@ void test_tick() {
   }
 }
 
+// Interrupt service routine to run FSM ticks
 void isr() {
-  // Acknowledge interrupt
+  // Acknowledge timer interrupt
   intervalTimer_ackInterrupt(INTERVAL_TIMER_0);
 
   // Repeatedly tick the touch screen state machine
@@ -73,6 +75,7 @@ void isr() {
   test_tick();
 }
 
+// Touchscreen test program
 int main() {
   printf("========== Starting touchscreen test program ==========\n");
 
