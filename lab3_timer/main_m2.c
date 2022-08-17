@@ -54,15 +54,19 @@ int main() {
   printf("=============== Done milestone 2 ===============\n");
 }
 
-// Reads the timer1 registers based upon the offset.
+// Reads the timer0 registers based upon the offset.
 static uint32_t readTimer0Reg(uint32_t registerOffset) {
   uint32_t address = XPAR_AXI_TIMER_0_BASEADDR + registerOffset;
   return Xil_In32(address);
 }
+
+// Reads the timer1 registers based upon the offset.
 static uint32_t readTimer1Reg(uint32_t registerOffset) {
   uint32_t address = XPAR_AXI_TIMER_1_BASEADDR + registerOffset;
   return Xil_In32(address);
 }
+
+// Reads the timer2 registers based upon the offset.
 static uint32_t readTimer2Reg(uint32_t registerOffset) {
   uint32_t address = XPAR_AXI_TIMER_2_BASEADDR + registerOffset;
   return Xil_In32(address);
