@@ -22,6 +22,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define BACKGROUND_COLOR DISPLAY_DARK_BLUE
 
+#define NUM_COLS 3
+#define DIV_MID 2
+
+#define TOP_LINE_Y (DISPLAY_HEIGHT / 3)
+#define BOT_LINE_Y (DISPLAY_HEIGHT * 2 / 3)
+#define LEFT_LINE_X (DISPLAY_WIDTH / 3)
+#define RIGHT_LINE_X (DISPLAY_WIDTH * 2 / 3)
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Globals /////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,18 +44,18 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // Inits the tic-tac-toe display, draws the lines that form the board.
 void ticTacToeDisplay_init() {
-  display_drawFastHLine(0, DISPLAY_HEIGHT / 3, DISPLAY_WIDTH, COLOR_GRID);
-  display_drawFastHLine(0, DISPLAY_HEIGHT * 2 / 3, DISPLAY_WIDTH, COLOR_GRID);
-  display_drawFastVLine(DISPLAY_WIDTH / 3, 0, DISPLAY_HEIGHT, COLOR_GRID);
-  display_drawFastVLine(DISPLAY_WIDTH * 2 / 3, 0, DISPLAY_HEIGHT, COLOR_GRID);
+  display_drawFastHLine(0, TOP_LINE_Y, DISPLAY_WIDTH, COLOR_GRID);
+  display_drawFastHLine(0, BOT_LINE_Y, DISPLAY_WIDTH, COLOR_GRID);
+  display_drawFastVLine(LEFT_LINE_X, 0, DISPLAY_HEIGHT, COLOR_GRID);
+  display_drawFastVLine(RIGHT_LINE_X, 0, DISPLAY_HEIGHT, COLOR_GRID);
 }
 
 // Draws an X at the specified location
 // erase == true means to erase the X by redrawing it as background.
 void ticTacToeDisplay_drawX(tictactoe_location_t location, bool erase) {
-  uint16_t x1 = DISPLAY_WIDTH * location.column / 3 + PADX;
+  uint16_t x1 = DISPLAY_WIDTH * location.column / NUM_COLS + PADX;
   uint16_t x2 = x1 + XO_WIDTH;
-  uint16_t y1 = DISPLAY_HEIGHT * location.row / 3 + PADY;
+  uint16_t y1 = DISPLAY_HEIGHT * location.row / NUM_COLS + PADY;
   uint16_t y2 = y1 + XO_WIDTH;
 
   display_drawLine(x1, y1, x2, y2, erase ? BACKGROUND_COLOR : COLOR_X);
@@ -57,11 +65,20 @@ void ticTacToeDisplay_drawX(tictactoe_location_t location, bool erase) {
 // Draws an O at the specified row and column.
 // erase == true means to erase the X by redrawing it as background.
 void ticTacToeDisplay_drawO(tictactoe_location_t location, bool erase) {
-  uint16_t x = DISPLAY_WIDTH * location.column / 3 + PADX + XO_WIDTH / 2;
-  uint16_t y = DISPLAY_HEIGHT * location.row / 3 + PADY + XO_WIDTH / 2;
+  uint16_t x =
+      DISPLAY_WIDTH * location.column / NUM_COLS + PADX + XO_WIDTH / DIV_MID;
+  uint16_t y =
+      DISPLAY_HEIGHT * location.row / NUM_COLS + PADY + XO_WIDTH / DIV_MID;
 
-  display_drawCircle(x, y, XO_WIDTH / 2, erase ? BACKGROUND_COLOR : COLOR_O);
+  display_drawCircle(x, y, XO_WIDTH / DIV_MID,
+                     erase ? BACKGROUND_COLOR : COLOR_O);
 }
+
+#define TOP 0
+#define MID 1
+#define BOTTOM 2
+#define LEFT 0
+#define RIGHT 2
 
 // For a given touch location on the touchscreen, this function returns the
 // corresponding tictactoe board location.
@@ -72,24 +89,24 @@ ticTacToeDisplay_getLocationFromPoint(display_point_t point) {
   int16_t x = point.x;
   int16_t y = point.y;
 
-  uint16_t x1 = DISPLAY_WIDTH / 3;
-  uint16_t x2 = DISPLAY_WIDTH * 2 / 3;
-  uint16_t y1 = DISPLAY_HEIGHT / 3;
-  uint16_t y2 = DISPLAY_HEIGHT * 2 / 3;
+  uint16_t x1 = LEFT_LINE_X;
+  uint16_t x2 = RIGHT_LINE_X;
+  uint16_t y1 = TOP_LINE_Y;
+  uint16_t y2 = BOT_LINE_Y;
 
   if (x < x1)
-    location.column = 0;
+    location.column = LEFT;
   else if (x < x2)
-    location.column = 1;
+    location.column = MID;
   else
-    location.column = 2;
+    location.column = RIGHT;
 
   if (y < y1)
-    location.row = 0;
+    location.row = TOP;
   else if (y < y2)
-    location.row = 1;
+    location.row = MID;
   else
-    location.row = 2;
+    location.row = BOTTOM;
 
   return location;
 }
