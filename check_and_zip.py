@@ -50,7 +50,7 @@ def error(*msg, returncode=-1):
 
 def format_code():
     """Run ./format.py to format student code"""
-    print_color(TermColors.BLUE, "Running ./format to format your code")
+    print_color(TermColors.BLUE, "Running ./format.py to format your code")
 
     subprocess.run(
         [
@@ -345,7 +345,7 @@ def zip(lab, files):
         print("Created new zip file")
         # Loop through files that are marked for zip (f[2] == True)
         for f in (f for f in files if f[2]):
-            if f[0].is_file(): 
+            if f[0].is_file():
                 # Write file to zip file
                 print("Adding", f[0].relative_to(STUDENT_REPO_PATH))
                 zf.write(f[0], arcname=f[0].name)
