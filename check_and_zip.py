@@ -103,6 +103,8 @@ def get_lab_folder_name(lab):
         return "lab7_tictactoe"
     if lab in ("lab8m1", "lab8m2", "lab8m3"):
         return "lab8_missilecommand"
+    if lab == "lab9":
+        return "lab9_project"
     return lab
 
 
@@ -194,6 +196,15 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_lab_path / "missile.c", dest_lab_path, True))
         files.append((src_lab_path / "plane.c", dest_lab_path, True))
         files.append((src_lab_path / "gameControl.c", dest_lab_path, True))
+    elif lab == "lab9":
+        files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
+        files.append((src_libs_path / "buttons.c", dest_libs_path, False))
+        files.append((src_libs_path / "switches.c", dest_libs_path, False))
+        files.append((src_libs_path / "interrupts.c", dest_libs_path, False))
+        files.append((src_libs_path / "touchscreen.c", dest_libs_path, False))
+        files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
+        for f in src_lab_path.iterdir():
+            files.append((f, dest_lab_path, True))
 
     elif lab == "simon":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
@@ -257,9 +268,12 @@ def copy_solution_files(files_to_copy):
         print(
             "Copying", src.relative_to(STUDENT_REPO_PATH), "to", dest.relative_to(STUDENT_REPO_PATH)
         )
-        if not src.is_file():
+        if src.is_file():
+            shutil.copy(src, dest)
+        elif src.is_dir():
+            shutil.copytree(src, dest / src.name)
+        else:
             error("Required file", src, "does not exist.")
-        shutil.copy(src, dest)
 
 
 def build():
@@ -383,6 +397,7 @@ def main():
             "lab8m1",
             "lab8m2",
             "lab8m3",
+            "lab9",
             "390m3-1",
             "390m3-2",
             "390m3-3",
