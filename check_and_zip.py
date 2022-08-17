@@ -172,7 +172,6 @@ def get_files_to_copy_and_zip(lab):
         files.append((src_libs_path / "intervalTimer.c", dest_libs_path, False))
         files.append((src_lab_path / "ticTacToeControl.c", dest_lab_path, True))
         files.append((src_lab_path / "minimax.c", dest_lab_path, True))
-        files.append((src_lab_path / "testBoards.c", dest_lab_path, True))
     elif lab == "lab8m1":
         files.append((chk_lab_path / "drivers.cmake", dest_libs_path / "CMakeLists.txt", False))
         files.append((chk_lab_path / "cmake", dest_lab_path / "CMakeLists.txt", False))
