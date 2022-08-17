@@ -20,6 +20,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "touchscreen.h"
 
 #define TICK_PERIOD 50E-3
+#define ONE_SECOND 1.0
 
 // Interrupt function for state machine ticks
 void isr() {
@@ -56,7 +57,7 @@ int main() {
 
   // Configure the Timers
   intervalTimer_initCountDown(INTERVAL_TIMER_0, TICK_PERIOD);
-  intervalTimer_initCountDown(INTERVAL_TIMER_1, 1.0);
+  intervalTimer_initCountDown(INTERVAL_TIMER_1, ONE_SECOND);
 
   intervalTimer_enableInterrupt(INTERVAL_TIMER_0);
   intervalTimer_enableInterrupt(INTERVAL_TIMER_1);

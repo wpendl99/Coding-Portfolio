@@ -71,6 +71,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define MIDPOINT_DIVISOR 2
 
+#define RIGHT_TRIANGLE_NUM_CHARS 6
+
 // Define maximum/minimum values for hours, minutes, seconds.
 // Used to make it easier to parameterize the math functions.
 #define MAX_HOURS 12
@@ -348,7 +350,8 @@ static void drawUpDownButtons(int16_t color) {
                            CLOCK_DISPLAY_ORIGIN_Y, false, color);
   // Moving right, last button is over 6 characters from origin.
   drawTriangleUpDownButton(CLOCK_DISPLAY_ORIGIN_X +
-                               DISPLAY_CHAR_WIDTH * CLOCKDISPLAY_TEXT_SIZE * 6,
+                               DISPLAY_CHAR_WIDTH * CLOCKDISPLAY_TEXT_SIZE *
+                                   RIGHT_TRIANGLE_NUM_CHARS,
                            CLOCK_DISPLAY_ORIGIN_Y, false, color);
 }
 
