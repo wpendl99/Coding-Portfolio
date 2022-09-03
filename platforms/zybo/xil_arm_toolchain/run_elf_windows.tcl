@@ -12,7 +12,7 @@ if {[llength $target_list] > 1} {
 	puts "Error: Multiple matching targets: $target_list (Use JTAG_BOARD_LOC or JTAG_BOARD_FILTER to filter to only one board)"
 	exit 1
 } elseif {[llength $target_list] == 0} {
-    puts "Error: No targets matching filter: $cable_filter"
+    puts "Error: No targets found."
     exit 1
 }
 
