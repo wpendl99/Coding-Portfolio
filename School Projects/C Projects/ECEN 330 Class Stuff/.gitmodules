@@ -1,3 +1,0 @@
-[submodule "tools/fpga-programmer"]
-	path = tools/fpga-programmer
-	url = https://github.com/byuccl/fpga-programmer.git

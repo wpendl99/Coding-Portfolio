@@ -1,1 +1,0 @@
-add_subdirectory(lab7_tictactoe)
