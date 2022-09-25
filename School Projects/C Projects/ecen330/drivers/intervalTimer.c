@@ -1,6 +1,7 @@
 #ifndef INTERVALTIMER
 #define INTERVALTIMER
 
+#include "xil_io.h"
 #include "xparameters.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -41,12 +42,11 @@ const uint32_t INTERVAL_TIMER_CLOCK_FREQ_HZ[] = {
 
 #define ALL_OFF 0x00
 
+static uint32_t readRegister(uint32_t address);
+static void writeRegister(uint32_t address, uint32_t value);
+void intervalTimer_reload(uint32_t timerNumber);
+
 // You must configure the interval timer before you use it:
-// 1. Set the Timer Control/Status Registers such that:
-//  - The timer is in 64-bit cascade mode
-//  - The timer counts up
-// 2. Initialize both LOAD registers with zeros
-// 3. Call the _reload function to move the LOAD values into the Counters
 void intervalTimer_initCountUp(uint32_t timerNumber) {
   // 1. Configure Timer Control/Status Registers
   // Configuration for TCSR0:
@@ -74,12 +74,6 @@ void intervalTimer_initCountUp(uint32_t timerNumber) {
 }
 
 // You must configure the interval timer before you use it:
-// 1. Set the Timer Control/Status Registers such that:
-//  - The timer is in 64-bit cascade mode
-//  - The timer counts down
-//  - The timer automatically reloads when reaching zero
-// 2. Initialize LOAD registers with appropriate values, given the `period`.
-// 3. Call the _reload function to move the LOAD values into the Counters
 void intervalTimer_initCountDown(uint32_t timerNumber, double period) {
   // 1. Configure Timer Control/Status Registers
   // Configuration for TCSR0:
@@ -98,9 +92,12 @@ void intervalTimer_initCountDown(uint32_t timerNumber, double period) {
   writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TCSR1,
                 tcsr1_config_msk);
 
-  // 2. Initialize both LOAD registers with zeros
-  writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TLR0, ALL_OFF);
-  writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TLR1, ALL_OFF);
+  // 2. Initialize both LOAD registers with period
+  uint64_t seconds = INTERVAL_TIMER_CLOCK_FREQ_HZ[timerNumber] * period;
+  uint32_t upper_bits = seconds >> 32;
+  uint32_t lower_bits = seconds;
+  writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TLR0, lower_bits);
+  writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TLR1, upper_bits);
 
   // 3. Call the _reload function to move the LOAD values into the Counters
   intervalTimer_reload(timerNumber);
