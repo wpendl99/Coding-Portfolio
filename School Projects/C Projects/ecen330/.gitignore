@@ -1,0 +1,35 @@
+# Labs
+/lab5_touchscreeen
+/lab6_clock
+/lab7_tictactoe
+/lab8_missilecommand
+/lab9_project
+/lasertag
+
+# Temporary software files
+/build
+/build_emu
+*.o
+a.out
+
+# Vivado files
+*.str
+*.log
+*.jou
+*.html
+*.Xil
+
+# Check and zip generated files
+/test_repo
+*_lab*.zip
+
+# Other
+*.dump
+*.py
+*.md
+report
+/include
+/platforms
+/playground
+/tools
+makefile
