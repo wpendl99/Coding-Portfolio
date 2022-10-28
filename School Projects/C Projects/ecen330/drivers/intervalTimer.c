@@ -41,6 +41,7 @@ const uint32_t INTERVAL_TIMER_CLOCK_FREQ_HZ[] = {
 #define TCR1 0x18  // Timer/Coutner Register 1
 
 #define ALL_OFF 0x00
+#define UPPER_BIT_SHIFT 32
 
 static uint32_t readRegister(uint32_t address);
 static void writeRegister(uint32_t address, uint32_t value);
@@ -94,7 +95,7 @@ void intervalTimer_initCountDown(uint32_t timerNumber, double period) {
 
   // 2. Initialize both LOAD registers with period
   uint64_t seconds = INTERVAL_TIMER_CLOCK_FREQ_HZ[timerNumber] * period;
-  uint32_t upper_bits = seconds >> 32;
+  uint32_t upper_bits = seconds >> UPPER_BIT_SHIFT;
   uint32_t lower_bits = seconds;
   writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TLR0, lower_bits);
   writeRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TLR1, upper_bits);
@@ -156,7 +157,7 @@ double intervalTimer_getTotalDurationInSeconds(uint32_t timerNumber) {
   // Load upper half, shift to proper spot, then load lower
   uint64_t total_time =
       readRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TCR1);
-  total_time <<= 32;
+  total_time <<= UPPER_BIT_SHIFT;
   total_time |= readRegister(INTERVAL_TIMER_BASE_ADDRESS[timerNumber] + TCR0);
   return (double)total_time / INTERVAL_TIMER_CLOCK_FREQ_HZ[timerNumber];
 }
